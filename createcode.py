@@ -221,7 +221,7 @@ def client(sb, rows, key):
     notnull = []
     for row in rows:
         if row[12] == 'y':
-            notnull.append('this.inputData.'+row[3]+' != ""')
+            notnull.append('this.inputData.'+row[3].lower()+' != ""')
     notnullstr = ' && '.join(notnull)
 
     sb.append('                if (' + notnullstr + ') {'+'\n')
@@ -330,10 +330,10 @@ def clientht(sb, rows, key):
                 sb.append('        </span>'+'\n')
             elif row[4] == 'int':
                 sb.append('        &nbsp;&nbsp;'+row[2]+'：'+'\n')
-                sb.append('<input type="text" name="'+row[3].lower()+'" id="'+row[3].lower()+'" placeholder="'+row[2]+'" style="width:100px" class="input-text" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')">'+'\n')
+                sb.append('        <input type="text" name="'+row[3].lower()+'" id="'+row[3].lower()+'" placeholder="'+row[2]+'" style="width:100px" class="input-text" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')">'+'\n')
             else:
                 sb.append('        &nbsp;&nbsp;'+row[2]+'：'+'\n')
-                sb.append('<input type="text" name="'+row[3].lower()+'" id="'+row[3].lower()+'" placeholder="'+row[2]+'" style="width:100px" class="input-text">'+'\n')
+                sb.append('        <input type="text" name="'+row[3].lower()+'" id="'+row[3].lower()+'" placeholder="'+row[2]+'" style="width:100px" class="input-text">'+'\n')
 
     sb.append('            <button class="btn btn-warning" type="submit" @@click="clearData()" style="margin-top:0px;"><i class="Hui-iconfont">&#xe609;</i> 清空条件</button>'+'\n')
     sb.append('            <button class="btn btn-success" type="submit" @@click="search()" style="margin-top:0px;"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>'+'\n')
