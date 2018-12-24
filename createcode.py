@@ -283,7 +283,7 @@ def server(sb, rows, key):
     for row in rows:
         if row[4] == 'int':
             sb.append('            var ' + row[3].lower() +
-                      ' = Utils.GetRequest("' + row[3].lower() + '", 0);'+'\n')
+                      ' = Utils.GetRequestInt("' + row[3].lower() + '", 0);'+'\n')
         else:
             sb.append('            var ' + row[3].lower() +
                       ' = Utils.GetRequest("' + row[3].lower() + '", "");'+'\n')
@@ -292,13 +292,13 @@ def server(sb, rows, key):
 
     for row in rows:
         if row[4] == 'int':
-            sb.append('                ' + row[3] + ' = 0,'+'\n')
+            sb.append('                ' + row[3] + ' = ' + row[3].lower() + ','+'\n')
         elif row[4] == 'varchar':
-            sb.append('                ' + row[3] + ' = "",'+'\n')
+            sb.append('                ' + row[3] + ' = ' + row[3].lower() + ','+'\n')
         elif row[4] == 'datetime':
             sb.append('                ' + row[3] + ' = DateTime.Now,'+'\n')
         else:
-            sb.append('                ' + row[3] + ' = 0,'+'\n')
+            sb.append('                ' + row[3] + ' = ' + row[3].lower() + ','+'\n')
 
     sb.append('            };'+'\n')
     sb.append(
