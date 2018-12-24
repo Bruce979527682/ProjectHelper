@@ -3,8 +3,12 @@
 import xlrd  # 读
 import xlwt  # 写
 import math
+import datetime
 
-fout = open('C:/Users/EDZ/Desktop/basetable.txt',"w",encoding='utf-8')
+cdate = datetime.datetime.now().strftime('%Y-%m-%d')
+
+filepath = 'C:/Users/EDZ/Desktop/'+cdate
+fout = open('C:/Users/EDZ/Desktop/basetable.txt', "w", encoding='utf-8')
 
 workbook = xlrd.open_workbook(r'C:\Users\EDZ\Desktop\basetable.xlsx')
 excels = workbook.sheet_by_index(0)
@@ -21,6 +25,7 @@ for rows in excels._cell_values:
             tables.setdefault(key, [rows])
 strings = []
 i = 0
+
 
 def entity(sb, rows, key):
     sb.append('using Entity.Base;'+'\n')
@@ -41,7 +46,8 @@ def entity(sb, rows, key):
         sb.append('        /// ' + row[2]+'\n')
         sb.append('        /// </summary>'+'\n')
         if row[6] == 'y' and row[7] == 'y':
-            sb.append('        [SqlField(IsPrimaryKey = true, IsAutoId = true)]'+'\n')
+            sb.append(
+                '        [SqlField(IsPrimaryKey = true, IsAutoId = true)]'+'\n')
         elif row[6] == 'y':
             sb.append('        [SqlField(IsPrimaryKey = true)]'+'\n')
         elif row[7] == 'y':
@@ -50,20 +56,27 @@ def entity(sb, rows, key):
             sb.append('        [SqlField]'+'\n')
         if row[11] != '':
             if str(row[4]) == 'varchar':
-                sb.append('        public string ' + str(row[3]) + ' { get; set; } = ' + str(row[11]) + ';'+'\n')
+                sb.append('        public string ' +
+                          str(row[3]) + ' { get; set; } = ' + str(row[11]) + ';'+'\n')
             elif str(row[4]) == 'datetime':
-                sb.append('        public DateTime ' + str(row[3]) + ' { get; set; } = ' + str(row[11]) + ';'+'\n')
+                sb.append('        public DateTime ' +
+                          str(row[3]) + ' { get; set; } = ' + str(row[11]) + ';'+'\n')
             else:
-                sb.append('        public ' + str(row[4]) + ' ' + str( row[3]) + ' { get; set; } = ' + str(row[11]) + ';'+'\n')
+                sb.append('        public ' + str(row[4]) + ' ' + str(
+                    row[3]) + ' { get; set; } = ' + str(row[11]) + ';'+'\n')
         else:
             if str(row[4]) == 'varchar':
-                sb.append('        public string ' + str(row[3]) + ' { get; set; }'+'\n')
+                sb.append('        public string ' +
+                          str(row[3]) + ' { get; set; }'+'\n')
             elif str(row[4]) == 'datetime':
-                sb.append('        public DateTime ' + str(row[3]) + ' { get; set; }'+'\n')
+                sb.append('        public DateTime ' +
+                          str(row[3]) + ' { get; set; }'+'\n')
             else:
-                sb.append('        public ' + str(row[4]) + ' ' + str(row[3]) + ' { get; set; }'+'\n')
+                sb.append('        public ' +
+                          str(row[4]) + ' ' + str(row[3]) + ' { get; set; }'+'\n')
     sb.append('    }'+'\n')
     sb.append('}'+'\n')
+
 
 def bll(sb, rows, key):
     sb.append('using DAL.Base;'+'\n')
@@ -96,10 +109,13 @@ def bll(sb, rows, key):
     sb.append('            }'+'\n')
     sb.append('        }'+'\n')
     sb.append('        '+'\n')
-    sb.append('        public '+key + ' GetModelByCache(int minisnsId,int userId)'+'\n')
+    sb.append('        public '+key +
+              ' GetModelByCache(int minisnsId,int userId)'+'\n')
     sb.append('        {'+'\n')
-    sb.append('            var strWhere = $"MinisnsId={minisnsId} and UserId={userId}";'+'\n')
-    sb.append('            string key = string.Format(FCacheKey.' + key+'MinsnsIdKey, minisnsId, userId);'+'\n')
+    sb.append(
+        '            var strWhere = $"MinisnsId={minisnsId} and UserId={userId}";'+'\n')
+    sb.append('            string key = string.Format(FCacheKey.' +
+              key+'MinsnsIdKey, minisnsId, userId);'+'\n')
     sb.append('            var model = RedisUtil.Get<'+key+'>(key);'+'\n')
     sb.append('            if (model != null)'+'\n')
     sb.append('            {'+'\n')
@@ -118,17 +134,20 @@ def bll(sb, rows, key):
     sb.append('        '+'\n')
     sb.append('        public bool RemoveCache(int id)'+'\n')
     sb.append('        {'+'\n')
-    sb.append('            string key = string.Format(FCacheKey.'+key+'Key, id);'+'\n')
+    sb.append(
+        '            string key = string.Format(FCacheKey.'+key+'Key, id);'+'\n')
     sb.append('            return RedisUtil.Remove(key);'+'\n')
     sb.append('        }'+'\n')
     sb.append('        '+'\n')
     sb.append('        public bool RemoveCache(int minisnsId, int userId)'+'\n')
     sb.append('        {'+'\n')
-    sb.append('            string key = string.Format(FCacheKey.' + key+'MinsnsIdKey, minisnsId, userId);'+'\n')
+    sb.append('            string key = string.Format(FCacheKey.' +
+              key+'MinsnsIdKey, minisnsId, userId);'+'\n')
     sb.append('            return RedisUtil.Remove(key);'+'\n')
     sb.append('        }'+'\n')
     sb.append('    }'+'\n')
     sb.append('}'+'\n')
+
 
 def database(sb, rows):
     sb.append('CREATE TABLE `' + key + '` ('+'\n')
@@ -136,11 +155,14 @@ def database(sb, rows):
     for row in rows:
         if row[4] == 'int' or row[4] == 'varchar':
             if row[4] == 'int' and row[7] == 'y':
-                sb.append('  `' + row[3] + '` ' + row[4] + '(' + str(int(row[5])) + ')  ' + ('NOT NULL' if row[9] == 'y' else '') + ' ' + ('AUTO_INCREMENT' if row[7] == 'y' else '')+',' + '\n')
+                sb.append('  `' + row[3] + '` ' + row[4] + '(' + str(int(row[5])) + ')  ' + (
+                    'NOT NULL' if row[9] == 'y' else '') + ' ' + ('AUTO_INCREMENT' if row[7] == 'y' else '')+',' + '\n')
             else:
-                sb.append('  `' + row[3] + '` ' + row[4] + '(' + str(int(row[5])) + ') ' + ( 'NOT NULL' if row[9] == 'y' else '') + ',' + '\n')
+                sb.append('  `' + row[3] + '` ' + row[4] + '(' + str(int(row[5])) + ') ' + (
+                    'NOT NULL' if row[9] == 'y' else '') + ',' + '\n')
         else:
-            sb.append('  `' + row[3] + '` ' + row[4] + ' ' + ('NOT NULL' if row[9] == 'y' else '') + ','+'\n')
+            sb.append('  `' + row[3] + '` ' + row[4] + ' ' +
+                      ('NOT NULL' if row[9] == 'y' else '') + ','+'\n')
     pkeycol = list(filter(lambda x: x[6] == 'y', rows))
     indexcol = list(filter(lambda x: x[8] == 'y', rows))
     if pkeycol != None:
@@ -151,8 +173,10 @@ def database(sb, rows):
     ikey = []
     for ic in indexcol:
         ikey.append('  `' + ic[3] + '`')
-    sb.append('  KEY `Key_Index` ('+str(ikey).replace('[', '').replace(']', '').replace("'", '')+')'+'\n')
+    sb.append('  KEY `Key_Index` (' +
+              str(ikey).replace('[', '').replace(']', '').replace("'", '')+')'+'\n')
     sb.append(') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;'+'\n')
+
 
 def client(sb, rows, key):
     sb.append('@model  '+key+''+'\n')
@@ -245,6 +269,7 @@ def client(sb, rows, key):
     sb.append('    });'+'\n')
     sb.append('</script>'+'\n')
 
+
 def server(sb, rows, key):
     sb.append('        /// <summary>'+'\n')
     sb.append('        /// 新增信息'+'\n')
@@ -257,10 +282,12 @@ def server(sb, rows, key):
 
     for row in rows:
         if row[4] == 'int':
-            sb.append('            var ' + row[4].lower() + ' = Utils.GetRequest("' + row[4].lower() + '", 0);'+'\n')
+            sb.append('            var ' + row[3].lower() +
+                      ' = Utils.GetRequest("' + row[3].lower() + '", 0);'+'\n')
         else:
-            sb.append('            var ' + row[4].lower() + ' = Utils.GetRequest("' + row[4].lower() + '", "");'+'\n')
-    sb.append('            var ' +  key.lower() + ' = new ' + key + ''+'\n')
+            sb.append('            var ' + row[3].lower() +
+                      ' = Utils.GetRequest("' + row[3].lower() + '", "");'+'\n')
+    sb.append('            var ' + key.lower() + ' = new ' + key + ''+'\n')
     sb.append('            {'+'\n')
 
     for row in rows:
@@ -274,8 +301,10 @@ def server(sb, rows, key):
             sb.append('                ' + row[3] + ' = 0,'+'\n')
 
     sb.append('            };'+'\n')
-    sb.append('            return Json(new { code = -4, msg = "操作失败！" });'+'\n')
+    sb.append(
+        '            return Json(new { code = -4, msg = "操作失败！" });'+'\n')
     sb.append('        }'+'\n')
+
 
 def clientht(sb, rows, key):
     sb.append('@model WebUI.MiniSNSAdmin.Model.FriendViewModel'+'\n')
@@ -322,24 +351,29 @@ def clientht(sb, rows, key):
             if row[4] == 'datetime':
                 sb.append('        <span>'+'\n')
                 sb.append('            &nbsp;&nbsp;'+row[2]+'：'+'\n')
-                sb.append('            <input type="text" id="startTime" placeholder="开始时间" autocomplete="off" style="width:150px" class="input-text" onfocus="WdatePicker({ dateFmt: \'yyyy/MM/dd\', maxDate: \'@DateTime.Now\' })">'+'\n')
+                sb.append(
+                    '            <input type="text" id="startTime" placeholder="开始时间" autocomplete="off" style="width:150px" class="input-text" onfocus="WdatePicker({ dateFmt: \'yyyy/MM/dd\', maxDate: \'@DateTime.Now\' })">'+'\n')
                 sb.append('        </span>'+'\n')
                 sb.append('        <span>'+'\n')
                 sb.append('            &nbsp;&nbsp;至：'+'\n')
-                sb.append('            <input type="text" id="endTime" placeholder="结束时间" autocomplete="off" style="width:150px" class="input-text" onfocus="WdatePicker({ dateFmt: \'yyyy/MM/dd\', maxDate: \'@DateTime.Now\' })">'+'\n')
+                sb.append(
+                    '            <input type="text" id="endTime" placeholder="结束时间" autocomplete="off" style="width:150px" class="input-text" onfocus="WdatePicker({ dateFmt: \'yyyy/MM/dd\', maxDate: \'@DateTime.Now\' })">'+'\n')
                 sb.append('        </span>'+'\n')
             elif row[4] == 'int':
                 sb.append('        &nbsp;&nbsp;'+row[2]+'：'+'\n')
-                sb.append('        <input type="text" name="'+row[3].lower()+'" id="'+row[3].lower()+'" placeholder="'+row[2]+'" style="width:100px" class="input-text" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')">'+'\n')
+                sb.append('        <input type="text" name="'+row[3].lower()+'" id="'+row[3].lower()+'" placeholder="'+row[2] +
+                          '" style="width:100px" class="input-text" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')">'+'\n')
             else:
                 sb.append('        &nbsp;&nbsp;'+row[2]+'：'+'\n')
-                sb.append('        <input type="text" name="'+row[3].lower()+'" id="'+row[3].lower()+'" placeholder="'+row[2]+'" style="width:100px" class="input-text">'+'\n')
+                sb.append('        <input type="text" name="'+row[3].lower()+'" id="'+row[3].lower(
+                )+'" placeholder="'+row[2]+'" style="width:100px" class="input-text">'+'\n')
 
     sb.append('            <button class="btn btn-warning" type="submit" @@click="clearData()" style="margin-top:0px;"><i class="Hui-iconfont">&#xe609;</i> 清空条件</button>'+'\n')
     sb.append('            <button class="btn btn-success" type="submit" @@click="search()" style="margin-top:0px;"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>'+'\n')
     sb.append('    </div>'+'\n')
     sb.append('    <div class="cl pd-5 bg-1 bk-gray mt-20">'+'\n')
-    sb.append('        <div style="float: right;margin: 5px 5px 0px 20px;" class="dataTables_length">'+'\n')
+    sb.append(
+        '        <div style="float: right;margin: 5px 5px 0px 20px;" class="dataTables_length">'+'\n')
     sb.append('            <label>'+'\n')
     sb.append('                显示'+'\n')
     sb.append('                <select @@change="pagesizeChange(this)">'+'\n')
@@ -352,8 +386,10 @@ def clientht(sb, rows, key):
     sb.append('        </div>'+'\n')
     sb.append('        <span class="r" style="position: relative;top: 5px;">共有数据：<strong id="TotalCount">@ViewBag.TotalCount</strong> 条</span>'+'\n')
     sb.append('    </div>'+'\n')
-    sb.append('    <div class="mt-20" style="display:none;" v-show="isCreatedComplete">'+'\n')
-    sb.append('        <table class="table table-border table-bordered table-bg table-hover dataTable">'+'\n')
+    sb.append(
+        '    <div class="mt-20" style="display:none;" v-show="isCreatedComplete">'+'\n')
+    sb.append(
+        '        <table class="table table-border table-bordered table-bg table-hover dataTable">'+'\n')
     sb.append('            <thead>'+'\n')
     sb.append('                <tr class="text-c">'+'\n')
 
@@ -366,28 +402,35 @@ def clientht(sb, rows, key):
     sb.append('                </tr>'+'\n')
     sb.append('            </thead>'+'\n')
     sb.append('            <tbody id="pageBody">'+'\n')
-    sb.append('                <tr class="text-c" v-for="'+key.lower()+' in datalist">'+'\n')
-    
+    sb.append('                <tr class="text-c" v-for="' +
+              key.lower()+' in datalist">'+'\n')
+
     for row in rows:
         if row[14] == 'y':
             sb.append('                    <td>'+'\n')
-            sb.append('                        {{'+key.lower()+'.'+row[3]+'}}'+'\n')
+            sb.append(
+                '                        {{'+key.lower()+'.'+row[3]+'}}'+'\n')
             sb.append('                    </td>'+'\n')
 
     sb.append('                    <td>'+'\n')
-    sb.append('                        <input type="button" value="通过" @@click="passItem('+key.lower()+'.Id)" class="btn btn-primary-outline radius">'+'\n')
-    sb.append('                        <input type="button" value="不通过" @@click="notpassItem('+key.lower()+'.Id)" class="btn btn-primary-outline radius">'+'\n')
-    sb.append('                       <input type="button" value="删除" @@click="delItem('+key.lower()+'.Id)" class="btn btn-danger-outline radius">'+'\n')
+    sb.append('                        <input type="button" value="通过" @@click="passItem(' +
+              key.lower()+'.Id)" class="btn btn-primary-outline radius">'+'\n')
+    sb.append('                        <input type="button" value="不通过" @@click="notpassItem(' +
+              key.lower()+'.Id)" class="btn btn-primary-outline radius">'+'\n')
+    sb.append('                       <input type="button" value="删除" @@click="delItem(' +
+              key.lower()+'.Id)" class="btn btn-danger-outline radius">'+'\n')
     sb.append('                    </td>'+'\n')
     sb.append('                </tr>'+'\n')
     sb.append('            </tbody>'+'\n')
     sb.append('        </table>'+'\n')
-    sb.append('        <div id="page" style="text-align: center;margin-top: 0.5rem;"></div>'+'\n')
+    sb.append(
+        '        <div id="page" style="text-align: center;margin-top: 0.5rem;"></div>'+'\n')
     sb.append('        <div id="page-nodata" style="text-align: center;margin: 2rem auto;" v-show="datalist.length < 1">--暂无数据--</div>'+'\n')
     sb.append('    </div>'+'\n')
     sb.append('</div>'+'\n')
     sb.append(''+'\n')
-    sb.append('<script src="~/Content/H-UI.Admin/lib/My97DatePicker/WdatePicker.js"></script>'+'\n')
+    sb.append(
+        '<script src="~/Content/H-UI.Admin/lib/My97DatePicker/WdatePicker.js"></script>'+'\n')
     sb.append(''+'\n')
     sb.append('<script>'+'\n')
     sb.append('    var app = new Vue({'+'\n')
@@ -412,13 +455,16 @@ def clientht(sb, rows, key):
     sb.append('        },'+'\n')
     sb.append('        methods: {'+'\n')
     sb.append('            delItem(id,uid) {'+'\n')
-    sb.append('                this.operExecute(id,\'确认删除吗？\', \'删除\',\'delete\');'+'\n')
+    sb.append(
+        '                this.operExecute(id,\'确认删除吗？\', \'删除\',\'delete\');'+'\n')
     sb.append('            },'+'\n')
     sb.append('            passItem(id, uid) {'+'\n')
-    sb.append('                this.operExecute(id,\'确认通过吗？\', \'通过\', \'pass\');'+'\n')
+    sb.append(
+        '                this.operExecute(id,\'确认通过吗？\', \'通过\', \'pass\');'+'\n')
     sb.append('            },'+'\n')
     sb.append('            notpassItem(id, uid) {'+'\n')
-    sb.append('                this.operExecute(id,\'确认不通过吗？\', \'不通过\', \'notpass\');'+'\n')
+    sb.append(
+        '                this.operExecute(id,\'确认不通过吗？\', \'不通过\', \'notpass\');'+'\n')
     sb.append('            },'+'\n')
     sb.append('            operExecute: function (id,tip,title,status) {'+'\n')
     sb.append('                layer.open({'+'\n')
@@ -428,39 +474,48 @@ def clientht(sb, rows, key):
     sb.append('                    yes: function () {'+'\n')
     sb.append('                        $.ajax({'+'\n')
     sb.append('                            type: "POST",'+'\n')
-    sb.append('                            url: "/fajax/method/@ViewBag.MinisnsId",'+'\n')
-    sb.append('                            data: { oid: id,status: status },'+'\n')
+    sb.append(
+        '                            url: "/fajax/method/@ViewBag.MinisnsId",'+'\n')
+    sb.append(
+        '                            data: { oid: id,status: status },'+'\n')
     sb.append('                            dataType: "json",'+'\n')
     sb.append('                            success: function (data) {'+'\n')
     sb.append('                                layer.closeAll();'+'\n')
     sb.append('                                if (1 === data.code) {'+'\n')
-    sb.append('                                    layer.msg("操作成功", { icon: 1 });'+'\n')
+    sb.append(
+        '                                    layer.msg("操作成功", { icon: 1 });'+'\n')
     sb.append('                                    app.pageQuery();'+'\n')
     sb.append('                                } else {'+'\n')
-    sb.append('                                    layer.msg(data.msg, { icon: 2 });'+'\n')
+    sb.append(
+        '                                    layer.msg(data.msg, { icon: 2 });'+'\n')
     sb.append('                                }'+'\n')
     sb.append('                            },'+'\n')
-    sb.append('                            error: function (XMLHttpRequest, textStatus, errorThrown) {'+'\n')
+    sb.append(
+        '                            error: function (XMLHttpRequest, textStatus, errorThrown) {'+'\n')
     sb.append('                                layer.closeAll();'+'\n')
-    sb.append('                                layer.msg("操作失败，网络连接异常", { icon: 0 });'+'\n')
+    sb.append(
+        '                                layer.msg("操作失败，网络连接异常", { icon: 0 });'+'\n')
     sb.append('                            }'+'\n')
     sb.append('                        });'+'\n')
     sb.append('                    }'+'\n')
     sb.append('                });'+'\n')
     sb.append('            },'+'\n')
     sb.append('            pageQuery() {'+'\n')
-    sb.append('                 $.post("/fajax/GetList/@ViewBag.MinisnsId", this.queryPara, function (data) {'+'\n')
+    sb.append(
+        '                 $.post("/fajax/GetList/@ViewBag.MinisnsId", this.queryPara, function (data) {'+'\n')
     sb.append('                     if (data != undefined) {'+'\n')
     sb.append('                         if (data.code == 1) {'+'\n')
     sb.append('                             app.datalist = data.list;'+'\n')
-    sb.append('                             app.resetPage(data.count, app.queryPara.pageindex);'+'\n')
+    sb.append(
+        '                             app.resetPage(data.count, app.queryPara.pageindex);'+'\n')
     sb.append('                         }'+'\n')
     sb.append('                         else {'+'\n')
     sb.append('                             app.datalist = [];'+'\n')
     sb.append('                         }'+'\n')
     sb.append('                     } else {'+'\n')
     sb.append('                         app.datalist = [];'+'\n')
-    sb.append('                         app.resetPage(0, app.queryPara.pageindex);'+'\n')
+    sb.append(
+        '                         app.resetPage(0, app.queryPara.pageindex);'+'\n')
     sb.append('                    }'+'\n')
     sb.append('                });'+'\n')
     sb.append('            },'+'\n')
@@ -468,12 +523,14 @@ def clientht(sb, rows, key):
 
     for row in rows:
         if row[13] == 'y':
-            sb.append('                $("#'+row[3].lower()+'").val(\'\');'+'\n')
-            sb.append('                this.queryPara.'+row[3].lower()+' = \'\';'+'\n')
+            sb.append('                $("#' +
+                      row[3].lower()+'").val(\'\');'+'\n')
+            sb.append('                this.queryPara.' +
+                      row[3].lower()+' = \'\';'+'\n')
     sb.append('                this.pageQuery();'+'\n')
     sb.append('                this.queryPara.startTime = \'\';'+'\n')
     sb.append('                this.queryPara.endTime = \'\';'+'\n')
-    
+
     sb.append('            },'+'\n')
     sb.append('            resetPage(recordCount, pageIndex) {'+'\n')
     sb.append('                var pages = recordCount % this.queryPara.pagesize == 0 ? recordCount / this.queryPara.pagesize : recordCount / this.queryPara.pagesize + 1;'+'\n')
@@ -483,7 +540,8 @@ def clientht(sb, rows, key):
     sb.append('                    curr: pageIndex,'+'\n')
     sb.append('                    jump: function (obj, first) {'+'\n')
     sb.append('                        if (!first) {'+'\n')
-    sb.append('                            this.queryPara.pageindex = obj.curr;'+'\n')
+    sb.append(
+        '                            this.queryPara.pageindex = obj.curr;'+'\n')
     sb.append('                            this.pageQuery();'+'\n')
     sb.append('                        }'+'\n')
     sb.append('                    }'+'\n')
@@ -502,27 +560,35 @@ def clientht(sb, rows, key):
     for row in rows:
         if row[13] == 'y':
             if row[4] == 'datetime':
-                sb.append('                this.queryPara.startTime = $(\'#startTime\').val().trim();'+'\n')
-                sb.append('                this.queryPara.endTime = $(\'#endTime\').val().trim();'+'\n')
-                sb.append('                if (this.queryPara.startTime !== \'\' || this.queryPara.endTime !== \'\') {'+'\n')
-                sb.append('                    if (this.compareDate(this.queryPara.startTime, this.queryPara.endTime)) {'+'\n')
-                sb.append('                        layer.msg(\'结束时间不能小于开始时间\');'+'\n')
+                sb.append(
+                    '                this.queryPara.startTime = $(\'#startTime\').val().trim();'+'\n')
+                sb.append(
+                    '                this.queryPara.endTime = $(\'#endTime\').val().trim();'+'\n')
+                sb.append(
+                    '                if (this.queryPara.startTime !== \'\' || this.queryPara.endTime !== \'\') {'+'\n')
+                sb.append(
+                    '                    if (this.compareDate(this.queryPara.startTime, this.queryPara.endTime)) {'+'\n')
+                sb.append(
+                    '                        layer.msg(\'结束时间不能小于开始时间\');'+'\n')
                 sb.append('                        return;'+'\n')
                 sb.append('                    }'+'\n')
                 sb.append('                }'+'\n')
             else:
-                sb.append('                this.queryPara.'+row[3].lower()+' = $(\'#'+row[3].lower()+'\').val().trim();'+'\n')
+                sb.append('                this.queryPara.' +
+                          row[3].lower()+' = $(\'#'+row[3].lower()+'\').val().trim();'+'\n')
     sb.append('                this.pageQuery();'+'\n')
 
     sb.append('            },'+'\n')
     sb.append('            compareDate(checkStartDate, checkEndDate) {'+'\n')
-    sb.append('                if (new Date(checkStartDate) > new Date(checkEndDate)) {'+'\n')
+    sb.append(
+        '                if (new Date(checkStartDate) > new Date(checkEndDate)) {'+'\n')
     sb.append('                    return true;'+'\n')
     sb.append('                }'+'\n')
     sb.append('                return false;'+'\n')
     sb.append('            },'+'\n')
     sb.append('            convertTime: function (time) {'+'\n')
-    sb.append('                var date = new Date(parseInt(time.substr(6, 13)));'+'\n')
+    sb.append(
+        '                var date = new Date(parseInt(time.substr(6, 13)));'+'\n')
     sb.append('                var y = date.getFullYear();'+'\n')
     sb.append('                var m = date.getMonth() + 1;'+'\n')
     sb.append('                m = m < 10 ? (\'0\' + m) : m;'+'\n')
@@ -532,8 +598,10 @@ def clientht(sb, rows, key):
     sb.append('                h = h < 10 ? (\'0\' + h) : h;'+'\n')
     sb.append('                var minute = date.getMinutes();'+'\n')
     sb.append('                var second = date.getSeconds();'+'\n')
-    sb.append('                minute = minute < 10 ? (\'0\' + minute) : minute;'+'\n')
-    sb.append('                second = second < 10 ? (\'0\' + second) : second;'+'\n')
+    sb.append(
+        '                minute = minute < 10 ? (\'0\' + minute) : minute;'+'\n')
+    sb.append(
+        '                second = second < 10 ? (\'0\' + second) : second;'+'\n')
     sb.append('                return y + \'-\' + m + \'-\' + d + \' \' + h + \':\' + minute + \':\' + second;'+'\n')
     sb.append('            }'+'\n')
     sb.append('        },'+'\n')
@@ -552,6 +620,7 @@ def clientht(sb, rows, key):
     sb.append('    });'+'\n')
     sb.append('</script>'+'\n')
 
+
 def serverht(sb, rows):
     sb.append('        /// <summary>'+'\n')
     sb.append('        /// 获取数据'+'\n')
@@ -560,79 +629,89 @@ def serverht(sb, rows):
     sb.append('        [HttpPost]'+'\n')
     sb.append('        public JsonResult GetList(int id)'+'\n')
     sb.append('        {'+'\n')
-    sb.append('            var pageIndex = Utils.GetRequestInt("pageindex", 1);'+'\n')
+    sb.append(
+        '            var pageIndex = Utils.GetRequestInt("pageindex", 1);'+'\n')
     sb.append('            var pageSize = Utils.GetRequestInt("pagesize", 10);'+'\n')
     sb.append('            var startTime = Utils.GetRequest("startTime", "");'+'\n')
     sb.append('            var endTime = Utils.GetRequest("endTime", "");'+'\n')
     for row in rows:
         if row[13] == 'y':
             if row[4] == 'int':
-                sb.append('            var ' + row[3].lower() + ' = Utils.GetRequestInt("' + row[3].lower() + '", 0);'+'\n')
+                sb.append('            var ' + row[3].lower(
+                ) + ' = Utils.GetRequestInt("' + row[3].lower() + '", 0);'+'\n')
             else:
-                sb.append('            var ' + row[3].lower() + ' = Utils.GetRequest("' + row[3].lower() + '", "");'+'\n')
+                sb.append(
+                    '            var ' + row[3].lower() + ' = Utils.GetRequest("' + row[3].lower() + '", "");'+'\n')
 
     sb.append('            StringBuilder strWhere = new StringBuilder();'+'\n')
-    sb.append('            strWhere.Append($"MinisnsId={id} and Status>=0");'+'\n')
+    sb.append(
+        '            strWhere.Append($"MinisnsId={id} and Status>=0");'+'\n')
 
     for row in rows:
         if row[13] == 'y':
             if row[4] == 'int':
                 sb.append('            if (' + row[3].lower() + ' > 0)'+'\n')
                 sb.append('            {'+'\n')
-                sb.append('                strWhere.AppendFormat(" and Id = {0}", matchId);'+'\n')
+                sb.append(
+                    '                strWhere.AppendFormat(" and Id = {0}", matchId);'+'\n')
                 sb.append('            }'+'\n')
             elif row[4] == 'datetime':
-                sb.append('            if (!string.IsNullOrEmpty(' + row[3].lower() + '))'+'\n')
+                sb.append(
+                    '            if (!string.IsNullOrEmpty(' + row[3].lower() + '))'+'\n')
                 sb.append('            {'+'\n')
-                sb.append('                strWhere.AppendFormat(" and '+ row[3] +' between \'{0}\' and DATE_ADD(\'{1}\',INTERVAL 1 DAY)", startTime, endTime);'+'\n')
+                sb.append('                strWhere.AppendFormat(" and ' +
+                          row[3] + ' between \'{0}\' and DATE_ADD(\'{1}\',INTERVAL 1 DAY)", startTime, endTime);'+'\n')
                 sb.append('            }'+'\n')
             else:
-                sb.append('            if (!string.IsNullOrEmpty(' + row[3].lower() + '))'+'\n')
+                sb.append(
+                    '            if (!string.IsNullOrEmpty(' + row[3].lower() + '))'+'\n')
                 sb.append('            {'+'\n')
-                sb.append('                strWhere.AppendFormat(" and ' + row[3] + ' = \'{0}\'", ' + row[3].lower() + ');'+'\n')
+                sb.append('                strWhere.AppendFormat(" and ' +
+                          row[3] + ' = \'{0}\'", ' + row[3].lower() + ');'+'\n')
                 sb.append('            }'+'\n')
 
     sb.append('            return Json(new { code = 0, msg = "没有数据" });'+'\n')
     sb.append('        }'+'\n')
 
-for i in range(0, len(tables)):
-    for key in tables:
-        items = tables[key]
-        # entity
-        entity(strings, items, key)
-        strings.append('\n')
-        strings.append('\n')
-        strings.append('\n')
-        # bll
-        bll(strings, items, key)
-        strings.append('\n')
-        strings.append('\n')
-        strings.append('\n')
-        # database
-        database(strings, items)
-        strings.append('\n')
-        strings.append('\n')
-        strings.append('\n')
-        # 前端html
-        client(strings, items, key)
-        strings.append('\n')
-        strings.append('\n')
-        strings.append('\n')
-        # 前端cs
-        server(strings, items, key)
-        strings.append('\n')
-        strings.append('\n')
-        strings.append('\n')
-        # 后端html
-        clientht(strings, items, key)
-        strings.append('\n')
-        strings.append('\n')
-        strings.append('\n')
-        # 后端cs
-        serverht(strings, items)
-        strings.append('\n')
-        strings.append('\n')
-        strings.append('\n')
+
+for key in tables:
+    items = tables[key]
+    # entity
+    entity(strings, items, key)
+    strings.append('\n')
+    strings.append('\n')
+    strings.append('\n')
+    # bll
+    bll(strings, items, key)
+    strings.append('\n')
+    strings.append('\n')
+    strings.append('\n')
+    # database
+    database(strings, items)
+    strings.append('\n')
+    strings.append('\n')
+    strings.append('\n')
+    # 前端html
+    client(strings, items, key)
+    strings.append('\n')
+    strings.append('\n')
+    strings.append('\n')
+    # 前端cs
+    server(strings, items, key)
+    strings.append('\n')
+    strings.append('\n')
+    strings.append('\n')
+    # 后端html
+    clientht(strings, items, key)
+    strings.append('\n')
+    strings.append('\n')
+    strings.append('\n')
+    # 后端cs
+    serverht(strings, items)
+    strings.append('\n')
+    strings.append('\n')
+    strings.append('\n')
+
 
 fout.writelines(strings)
 print('end')
