@@ -4,11 +4,14 @@ import xlrd  # 读
 import xlwt  # 写
 import math
 import datetime
+import os
 
 cdate = datetime.datetime.now().strftime('%Y-%m-%d')
 
 filepath = 'C:/Users/EDZ/Desktop/'+cdate
-fout = open('C:/Users/EDZ/Desktop/basetable.txt', "w", encoding='utf-8')
+isExists=os.path.exists(filepath)
+if not isExists:
+    os.makedirs(filepath)
 
 workbook = xlrd.open_workbook(r'C:\Users\EDZ\Desktop\basetable.xlsx')
 excels = workbook.sheet_by_index(0)
@@ -23,11 +26,10 @@ for rows in excels._cell_values:
             key = rows[1]
             tnames.setdefault(key, rows[0])
             tables.setdefault(key, [rows])
-strings = []
 i = 0
 
-
-def entity(sb, rows, key):
+def entity(rows, key):
+    sb = []
     sb.append('using Entity.Base;'+'\n')
     sb.append('using System;'+'\n')
     sb.append('using Utility;'+'\n')
@@ -76,9 +78,12 @@ def entity(sb, rows, key):
                           str(row[4]) + ' ' + str(row[3]) + ' { get; set; }'+'\n')
     sb.append('    }'+'\n')
     sb.append('}'+'\n')
+    fout = open(filepath + '/entity.txt', "w", encoding='utf-8')
+    fout.writelines(sb)
+    fout.close()
 
-
-def bll(sb, rows, key):
+def bll(rows, key):
+    sb = []
     sb.append('using DAL.Base;'+'\n')
     sb.append('using Entity.MiniSNS.Friend;'+'\n')
     sb.append('using System.Collections.Generic;'+'\n')
@@ -147,9 +152,12 @@ def bll(sb, rows, key):
     sb.append('        }'+'\n')
     sb.append('    }'+'\n')
     sb.append('}'+'\n')
+    fout = open(filepath + '/bll.txt', "w", encoding='utf-8')
+    fout.writelines(sb)
+    fout.close()
 
-
-def database(sb, rows):
+def database(rows):
+    sb = []
     sb.append('CREATE TABLE `' + key + '` ('+'\n')
 
     for row in rows:
@@ -176,9 +184,12 @@ def database(sb, rows):
     sb.append('  KEY `Key_Index` (' +
               str(ikey).replace('[', '').replace(']', '').replace("'", '')+')'+'\n')
     sb.append(') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;'+'\n')
+    fout = open(filepath + '/database.txt', "w", encoding='utf-8')
+    fout.writelines(sb)
+    fout.close()
 
-
-def client(sb, rows, key):
+def client(rows, key):
+    sb = []
     sb.append('@model  '+key+''+'\n')
     sb.append('@{'+'\n')
     sb.append('    ViewBag.Title = "'+key+'";'+'\n')
@@ -272,16 +283,19 @@ def client(sb, rows, key):
     sb.append('        },'+'\n')
     sb.append('        mounted() {'+'\n')
     sb.append(''+'\n')
-    sb.append('            window.addEventListener('scroll', this.handleScroll);'+'\n')
+    sb.append('            window.addEventListener(\'scroll\', this.handleScroll);'+'\n')
     sb.append('        },'+'\n')
     sb.append('        created: function () {'+'\n')
     sb.append('            this.isCreatedComplete = true;'+'\n')
     sb.append('        }'+'\n')
     sb.append('    });'+'\n')
     sb.append('</script>'+'\n')
+    fout = open(filepath + '/client.txt', "w", encoding='utf-8')
+    fout.writelines(sb)
+    fout.close()
 
-
-def server(sb, rows, key):
+def server(rows, key):
+    sb = []
     sb.append('        /// <summary>'+'\n')
     sb.append('        /// 新增信息'+'\n')
     sb.append('        /// </summary>'+'\n')
@@ -315,9 +329,12 @@ def server(sb, rows, key):
     sb.append(
         '            return Json(new { code = -4, msg = "操作失败！" });'+'\n')
     sb.append('        }'+'\n')
+    fout = open(filepath + '/cs.txt', "w", encoding='utf-8')
+    fout.writelines(sb)
+    fout.close()
 
-
-def clientht(sb, rows, key):
+def clientht(rows, key):
+    sb = []
     sb.append('@model WebUI.MiniSNSAdmin.Model.FriendViewModel'+'\n')
     sb.append('@{'+'\n')
     sb.append('    ViewBag.title = "'+tnames[key]+'";'+'\n')
@@ -630,9 +647,12 @@ def clientht(sb, rows, key):
     sb.append('        }'+'\n')
     sb.append('    });'+'\n')
     sb.append('</script>'+'\n')
+    fout = open(filepath + '/clientht.txt', "w", encoding='utf-8')
+    fout.writelines(sb)
+    fout.close()
 
-
-def serverht(sb, rows):
+def serverht(rows):
+    sb = []
     sb.append('        /// <summary>'+'\n')
     sb.append('        /// 获取数据'+'\n')
     sb.append('        /// </summary>'+'\n')
@@ -683,47 +703,31 @@ def serverht(sb, rows):
 
     sb.append('            return Json(new { code = 0, msg = "没有数据" });'+'\n')
     sb.append('        }'+'\n')
-
+    fout = open(filepath + '/csht.txt', "w", encoding='utf-8')
+    fout.writelines(sb)
+    fout.close()
 
 for key in tables:
     items = tables[key]
     # entity
-    entity(strings, items, key)
-    strings.append('\n')
-    strings.append('\n')
-    strings.append('\n')
+    entity(items, key)
+    
     # bll
-    bll(strings, items, key)
-    strings.append('\n')
-    strings.append('\n')
-    strings.append('\n')
+    bll(items, key)
+
     # database
-    database(strings, items)
-    strings.append('\n')
-    strings.append('\n')
-    strings.append('\n')
+    database(items)
+
     # 前端html
-    client(strings, items, key)
-    strings.append('\n')
-    strings.append('\n')
-    strings.append('\n')
+    client(items, key)
+
     # 前端cs
-    server(strings, items, key)
-    strings.append('\n')
-    strings.append('\n')
-    strings.append('\n')
+    server(items, key)
+
     # 后端html
-    clientht(strings, items, key)
-    strings.append('\n')
-    strings.append('\n')
-    strings.append('\n')
+    clientht(items, key)
+    
     # 后端cs
-    serverht(strings, items)
-    strings.append('\n')
-    strings.append('\n')
-    strings.append('\n')
+    serverht(items)
 
-
-fout.writelines(strings)
 print('end')
-fout.close()
