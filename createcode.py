@@ -78,7 +78,7 @@ def entity(rows, key):
                           str(row[4]) + ' ' + str(row[3]) + ' { get; set; }'+'\n')
     sb.append('    }'+'\n')
     sb.append('}'+'\n')
-    fout = open(filepath + '/entity.txt', "w", encoding='utf-8')
+    fout = open(filepath + '/'+key+'-entity.txt', "w", encoding='utf-8')
     fout.writelines(sb)
     fout.close()
 
@@ -152,7 +152,7 @@ def bll(rows, key):
     sb.append('        }'+'\n')
     sb.append('    }'+'\n')
     sb.append('}'+'\n')
-    fout = open(filepath + '/bll.txt', "w", encoding='utf-8')
+    fout = open(filepath + '/'+key+'-bll.txt', "w", encoding='utf-8')
     fout.writelines(sb)
     fout.close()
 
@@ -184,7 +184,7 @@ def database(rows):
     sb.append('  KEY `Key_Index` (' +
               str(ikey).replace('[', '').replace(']', '').replace("'", '')+')'+'\n')
     sb.append(') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;'+'\n')
-    fout = open(filepath + '/database.txt', "w", encoding='utf-8')
+    fout = open(filepath + '/'+key+'-database.txt', "w", encoding='utf-8')
     fout.writelines(sb)
     fout.close()
 
@@ -290,7 +290,7 @@ def client(rows, key):
     sb.append('        }'+'\n')
     sb.append('    });'+'\n')
     sb.append('</script>'+'\n')
-    fout = open(filepath + '/client.txt', "w", encoding='utf-8')
+    fout = open(filepath + '/'+key+'-client.txt', "w", encoding='utf-8')
     fout.writelines(sb)
     fout.close()
 
@@ -329,7 +329,7 @@ def server(rows, key):
     sb.append(
         '            return Json(new { code = -4, msg = "操作失败！" });'+'\n')
     sb.append('        }'+'\n')
-    fout = open(filepath + '/cs.txt', "w", encoding='utf-8')
+    fout = open(filepath + '/'+key+'-cs.txt', "w", encoding='utf-8')
     fout.writelines(sb)
     fout.close()
 
@@ -647,7 +647,7 @@ def clientht(rows, key):
     sb.append('        }'+'\n')
     sb.append('    });'+'\n')
     sb.append('</script>'+'\n')
-    fout = open(filepath + '/clientht.txt', "w", encoding='utf-8')
+    fout = open(filepath + '/'+key+'-clientht.txt', "w", encoding='utf-8')
     fout.writelines(sb)
     fout.close()
 
@@ -703,7 +703,7 @@ def serverht(rows):
 
     sb.append('            return Json(new { code = 0, msg = "没有数据" });'+'\n')
     sb.append('        }'+'\n')
-    fout = open(filepath + '/csht.txt', "w", encoding='utf-8')
+    fout = open(filepath + '/'+key+'-csht.txt', "w", encoding='utf-8')
     fout.writelines(sb)
     fout.close()
 
