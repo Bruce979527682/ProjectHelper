@@ -466,6 +466,7 @@ def clientht(rows, key):
     sb.append('        data: {'+'\n')
     sb.append('            datalist: [],'+'\n')
     sb.append('            isCreatedComplete: false,'+'\n')
+    sb.append('            totalCount: 0,,'+'\n')
     sb.append('            queryPara:{'+'\n')
     sb.append('                pageindex: 1,'+'\n')
     sb.append('                pagesize: 10,'+'\n')
@@ -534,6 +535,7 @@ def clientht(rows, key):
     sb.append('                     if (data != undefined) {'+'\n')
     sb.append('                         if (data.code == 1) {'+'\n')
     sb.append('                             app.datalist = data.list;'+'\n')
+    sb.append('                             app.totalCount = data.count;'+'\n')
     sb.append(
         '                             app.resetPage(data.count, app.queryPara.pageindex);'+'\n')
     sb.append('                         }'+'\n')
@@ -569,8 +571,8 @@ def clientht(rows, key):
     sb.append('                    jump: function (obj, first) {'+'\n')
     sb.append('                        if (!first) {'+'\n')
     sb.append(
-        '                            this.queryPara.pageindex = obj.curr;'+'\n')
-    sb.append('                            this.pageQuery();'+'\n')
+        '                            app.queryPara.pageindex = obj.curr;'+'\n')
+    sb.append('                            app.pageQuery();'+'\n')
     sb.append('                        }'+'\n')
     sb.append('                    }'+'\n')
     sb.append('                });'+'\n')
