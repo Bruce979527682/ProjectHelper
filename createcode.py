@@ -78,7 +78,7 @@ def entity(rows, key):
                           str(row[4]) + ' ' + str(row[3]) + ' { get; set; }'+'\n')
     sb.append('    }'+'\n')
     sb.append('}'+'\n')
-    fout = open(filepath + '/'+key+'-entity.txt', "w", encoding='utf-8')
+    fout = open(filepath + '/'+key+'.cs', "w", encoding='utf-8')
     fout.writelines(sb)
     fout.close()
 
@@ -152,7 +152,7 @@ def bll(rows, key):
     sb.append('        }'+'\n')
     sb.append('    }'+'\n')
     sb.append('}'+'\n')
-    fout = open(filepath + '/'+key+'-bll.txt', "w", encoding='utf-8')
+    fout = open(filepath + '/'+key+'BLL.cs', "w", encoding='utf-8')
     fout.writelines(sb)
     fout.close()
 
@@ -371,7 +371,7 @@ def clientht(rows, key):
     sb.append('    }'+'\n')
     sb.append('</style>'+'\n')
     sb.append(''+'\n')
-    sb.append('<div id="main" class="page-container">'+'\n')
+    sb.append('<div id="main" class="page-container" style="display:none;" v-show="isCreatedComplete">'+'\n')
     sb.append('    <div>'+'\n')
 
     for row in rows:
@@ -412,10 +412,10 @@ def clientht(rows, key):
     sb.append('                </select> 条'+'\n')
     sb.append('            </label>'+'\n')
     sb.append('        </div>'+'\n')
-    sb.append('        <span class="r" style="position: relative;top: 5px;">共有数据：<strong id="TotalCount">@ViewBag.TotalCount</strong> 条</span>'+'\n')
+    sb.append('        <span class="r" style="position: relative;top: 5px;">共有数据：<strong id="TotalCount">{{totalCount}}</strong> 条</span>'+'\n')
     sb.append('    </div>'+'\n')
     sb.append(
-        '    <div class="mt-20" style="display:none;" v-show="isCreatedComplete">'+'\n')
+        '    <div class="mt-20">'+'\n')
     sb.append(
         '        <table class="table table-border table-bordered table-bg table-hover dataTable">'+'\n')
     sb.append('            <thead>'+'\n')
@@ -466,7 +466,7 @@ def clientht(rows, key):
     sb.append('        data: {'+'\n')
     sb.append('            datalist: [],'+'\n')
     sb.append('            isCreatedComplete: false,'+'\n')
-    sb.append('            totalCount: 0,,'+'\n')
+    sb.append('            totalCount: 0,'+'\n')
     sb.append('            queryPara:{'+'\n')
     sb.append('                pageindex: 1,'+'\n')
     sb.append('                pagesize: 10,'+'\n')
@@ -504,7 +504,7 @@ def clientht(rows, key):
     sb.append('                        $.ajax({'+'\n')
     sb.append('                            type: "POST",'+'\n')
     sb.append(
-        '                            url: "/fajax/method/@ViewBag.MinisnsId",'+'\n')
+        '                            url: "/fajax/method/@Model.Minisns.Id",'+'\n')
     sb.append(
         '                            data: { oid: id,status: status },'+'\n')
     sb.append('                            dataType: "json",'+'\n')
@@ -531,7 +531,7 @@ def clientht(rows, key):
     sb.append('            },'+'\n')
     sb.append('            pageQuery() {'+'\n')
     sb.append(
-        '                 $.post("/fajax/GetList/@ViewBag.MinisnsId", this.queryPara, function (data) {'+'\n')
+        '                 $.post("/fajax/Get'+key+'List/@Model.Minisns.Id", this.queryPara, function (data) {'+'\n')
     sb.append('                     if (data != undefined) {'+'\n')
     sb.append('                         if (data.code == 1) {'+'\n')
     sb.append('                             app.datalist = data.list;'+'\n')
@@ -653,14 +653,14 @@ def clientht(rows, key):
     fout.writelines(sb)
     fout.close()
 
-def serverht(rows):
+def serverht(rows, key):
     sb = []
     sb.append('        /// <summary>'+'\n')
     sb.append('        /// 获取数据'+'\n')
     sb.append('        /// </summary>'+'\n')
     sb.append('        /// <returns></returns>'+'\n')
     sb.append('        [HttpPost]'+'\n')
-    sb.append('        public JsonResult GetList(int id)'+'\n')
+    sb.append('        public JsonResult Get'+key+'List(int id)'+'\n')
     sb.append('        {'+'\n')
     sb.append(
         '            var pageIndex = Utils.GetRequestInt("pageindex", 1);'+'\n')
@@ -686,7 +686,7 @@ def serverht(rows):
                 sb.append('            if (' + row[3].lower() + ' > 0)'+'\n')
                 sb.append('            {'+'\n')
                 sb.append(
-                    '                strWhere.AppendFormat(" and Id = {0}", matchId);'+'\n')
+                    '                strWhere.AppendFormat(" and Id = {0}", ' + row[3].lower() + ');'+'\n')
                 sb.append('            }'+'\n')
             elif row[4] == 'datetime':
                 sb.append(
@@ -703,8 +703,18 @@ def serverht(rows):
                           row[3] + ' = \'{0}\'", ' + row[3].lower() + ');'+'\n')
                 sb.append('            }'+'\n')
 
+    sb.append(''+'\n')
+    sb.append('            var '+key.lower()+'Bll = new '+key+'BLL();'+'\n')
+    sb.append('            var count = '+key.lower()+'Bll.GetCount(strWhere.ToString());'+'\n')
+    sb.append('            var list = '+key.lower()+'Bll.GetList(strWhere.ToString(), pageSize, pageIndex, "*", "Id desc");'+'\n')
+    sb.append(''+'\n')
+    sb.append('            if (list != null && list.Count > 0)'+'\n')
+    sb.append('            { '+'\n')
+    sb.append('                return Json(new { code = 1, list, count });'+'\n')
+    sb.append('            }'+'\n')
     sb.append('            return Json(new { code = 0, msg = "没有数据" });'+'\n')
     sb.append('        }'+'\n')
+
     fout = open(filepath + '/'+key+'-csht.txt', "w", encoding='utf-8')
     fout.writelines(sb)
     fout.close()
@@ -730,6 +740,6 @@ for key in tables:
     clientht(items, key)
     
     # 后端cs
-    serverht(items)
+    serverht(items, key)
 
 print('end')
