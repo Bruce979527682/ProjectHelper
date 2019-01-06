@@ -541,6 +541,7 @@ def clientht(rows, key):
     sb.append('                         }'+'\n')
     sb.append('                         else {'+'\n')
     sb.append('                             app.datalist = [];'+'\n')
+    sb.append('                             app.resetPage(0, 1);'+'\n')
     sb.append('                         }'+'\n')
     sb.append('                     } else {'+'\n')
     sb.append('                         app.datalist = [];'+'\n')
