@@ -209,6 +209,10 @@ def client(rows, key):
     sb.append('            time: 60,'+'\n')
     sb.append('            startTime: 60,'+'\n')
     sb.append('            sendMsg: false,'+'\n')
+    sb.append('            queryParm: {'+'\n')
+    sb.append('                pageindex: 1,'+'\n')
+    sb.append('                pagesize: 10,'+'\n')
+    sb.append('            },'+'\n')
     sb.append('            inputData: {'+'\n')
     for row in rows:
         if row[4] == 'int':
