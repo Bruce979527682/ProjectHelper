@@ -22,11 +22,14 @@ for line in lines:
 for province in provinces:
     print(province)
     clists = list(filter(lambda x:x[0:2]==province[0:2],citys))
-    for city in clists:
-        print(city)
-        alists = list(filter(lambda x:x[0:4]==city[0:4],areas))
-        for area in alists:
-            print(area)
+    if len(clists) > 1：
+        for city in clists:
+            print(city)
+            alists = list(filter(lambda x:x[0:4]==city[0:4],areas))
+            for area in alists:
+                print(area)
+    else:
+        clists = list(filter(lambda x:x[0:2]==province[0:2],areas))
 
 print("end;")
 
