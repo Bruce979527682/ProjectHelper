@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="renderer" content="webkit">
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <title>泡泡交友</title>
+    <title>123</title>
     <!--[if lt IE 8]>
     <meta http-equiv="refresh" content="0;ie.html" />
     <![endif]-->
@@ -72,7 +72,7 @@
             <!--左边导航-->
             <div id="nav-scroll" style="display:none;" v-show="isCreated">
                 <el-scrollbar class="sidebar-container" wrap-class="scrollbar-wrapper">
-                    <img alt="泡泡交友" v-bind:class="isCollapse?'sidebar-logo--mini':'sidebar-logo'" src="//j.vzan.cc/content/images/2018-11-30/paopao-logo.png" />
+                    <img alt="123" v-bind:class="isCollapse?'sidebar-logo--mini':'sidebar-logo'" src="logo.png" />
                     <el-menu :collapse="isCollapse"
                              :default-active="defIndex"
                              unique-opened
@@ -118,7 +118,7 @@
                         <div class="right-menu">
                             <div class="right-menu--item">
                                 <i class="el-icon-menu el-color-primary"></i>
-                                <span><a href="https://user.vzan.com/member/myworkbench" class="el-color-primary">管理后台</a></span>
+                                <span><a href="" class="el-color-primary">管理后台</a></span>
                             </div>
                             <div class="right-menu--item">
                                 @if (Model.IsCreate)
@@ -165,78 +165,13 @@
                 sPath: [],
                 isCreated: false,
                 menus: [
-                    { title: "泡泡首页", url: "/friend/index", icon: "#icon-dashboard", children: [] },
-                    {
-                        title: "平台管理", url: "", icon: "#icon-guide", children: [
-                            { title: "平台基本设置", url: "/friend/pset", icon: "",show: true },
-                            { title: "首页参数设置", url: "/friend/iset", icon: "", show: true },
-                            { title: "运营参数设置", url: "/friend/yset", icon: "", show: true },
-                            { title: "奖励设置", url: "/friend/inviteset", icon: "", show: true },
-                            { title: "相亲参数设置", url: "/xq/set", icon: "", show: true },
-                            { title: "VIP参数设置", url: "/friend/vipset", icon: "", show: true },
-                            { title: "用户私聊设置", url: "/friend/chatset", icon: "", show: true },
-                            { title: "首页轮播图设置", url: "/friend/imgset", icon: "", show: true },
-                            { title: "独立域名&独立支付", url: "/serviceprovider/domainserver", icon: "", show: @(!isAreaAgent ? "true":"false")}
-                        ]
-                    },
+                    { title: "首页", url: "", icon: "#icon-dashboard", children: [] },
                     {
                         title: "用户管理", url: "", icon: "#icon-user", children: [
-                            { title: "交友用户管理", url: "/friend/userlist", icon: "", show: true },
-                            { title: "相亲用户管理", url: "/xq/list", icon: "", show: true},
-                            { title: "马甲管理", url: "/sockpuppet/userlist", icon: "", show: true}]
-                    },
-                    {
-                        title: "婚介所管理", url: "", icon: "#icon-donate", children: [
-                            { title: "红娘入驻审核", url: "/matchagency/audit", icon: "", show: true},
-                            { title: "红娘管理", url: "/matchagency/manage", icon: "", show: true }
-                        ]
-                    },
-                    {
-                        title: "交友圈管理", url: "", icon: "#icon-wechat", children: [
-                            { title: "交友圈动态列表", url: "/friend/dlist", icon: "", show: true},
-                            { title: "交友圈标签管理", url: "/friend/tagset", icon: "", show: true},
-                            { title: "交友圈列表参数设置", url: "/friend/dset", icon: "", show: true}
-                        ]
-                    },
-                    {
-                        title: "审核管理", url: "", icon: "#icon-lock", children: [
-                            { title: "相册审核", url: "/friend/photolist", icon: "", show: true },
-                            { title: "VCR审核", url: "/friend/vcrlist", icon: "", show: true},
-                            { title: "投诉管理", url: "/friend/complainlist", icon: "", show: true}
-                        ]
-                    },
-                    {
-                        title: "自助广告管理", url: "", icon: "#icon-star", children: [
-                            { title: "自助广告列表", url: "/friend/advertlist", icon: "", show: true}
-                        ]
-                    },
-                    {
-                        title: "工具管理", url: "", icon: "#icon-component", children: [
-                            { title: "公告管理", url: "/friend/noticemanage", icon: "", show: true},
-                            { title: "礼物管理", url: "/friend/giftlist", icon: "", show: true},
-                            { title: "投票管理", url: "/friendvote/votemanage", icon: "", show: true},
-                            { title: "日签卡管理", url: "/dailysign/cardlist", icon: "", show: true},
-                            { title: "报名表", url: "/friend/applylist", icon: "", show: true},
-                            { title: "报名帖", url: "/friend/applyformlist", icon: "", show: true}
-                        ]
-                    },
-                    {
-                        title: "数据统计", url: "", icon: "#icon-chart", children: [
-                            { title: "收益明细", url: "/friend/olists", icon: "", show: true},
-                            { title: "用户开通服务记录", url: "/friend/serviceRecord", icon: "", show: true},
-                            { title: "用户数据分析", url: "/friend/ud", icon: "", show: true},
-                            { title: "平台红包领取情况", url: "/friend/redbagLog", icon: "", show: true},
-                            { title: "区域抽成收益", url: "/friend/agentolist", icon: "", show: @(isCityAgent ? "true":"false") },
-                            { title: "区域收益明细", url: "", icon: "", show: false }
-                        ]
-                    },
-                    {
-                        title: "活动管理", url: "", icon: "#icon-flag", children: [
-                            { title: "活动模板", url: "/friend/activitytemplate", icon: "", show: true},
-                            { title: "发布活动", url: "/friend/postactivity", icon: "", show: true},
-                            { title: "活动列表", url: "/friend/activitylist", icon: "", show: true}
-                        ]
-                    }
+                            { title: "用户管理", url: "/friend/userlist", icon: "", show: true },
+                            { title: "用户管理2", url: "/xq/list", icon: "", show: true},
+                            ]
+                    },                    
                 ],
             },
             methods: {
