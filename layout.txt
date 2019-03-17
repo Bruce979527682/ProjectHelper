@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>泡泡交友</title>
+    <!--[if lt IE 8]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link href="/Content/element-ui/theme.css" rel="stylesheet" />
+    <link href="/Content/element-ui/app.css" rel="stylesheet" />
+    <script src="~/assets/hui/js/jquery.min.js?v=2.1.4"></script>
+    <script src="/Content/element-ui/vue.js"></script>
+    <script src="/Content/element-ui/index.js"></script>
+</head>
+
+<body>
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position: absolute; width: 0; height: 0" id="__SVG_SPRITE_NODE__">
+        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" id="icon-chart">
+            <path d="M0 54.857h36.571V128H0V54.857zM91.429 27.43H128V128H91.429V27.429zM45.714 0h36.572v128H45.714V0z"></path>
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" id="icon-component">
+            <path d="M0 0h54.857v54.857H0V0zm0 73.143h54.857V128H0V73.143zm73.143 0H128V128H73.143V73.143zm27.428-18.286C115.72 54.857 128 42.577 128 27.43 128 12.28 115.72 0 100.571 0 85.423 0 73.143 12.28 73.143 27.429c0 15.148 12.28 27.428 27.428 27.428z"></path>
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 100" id="icon-dashboard">
+            <path d="M27.429 63.638c0-2.508-.893-4.65-2.679-6.424-1.786-1.775-3.94-2.662-6.464-2.662-2.524 0-4.679.887-6.465 2.662-1.785 1.774-2.678 3.916-2.678 6.424 0 2.508.893 4.65 2.678 6.424 1.786 1.775 3.94 2.662 6.465 2.662 2.524 0 4.678-.887 6.464-2.662 1.786-1.775 2.679-3.916 2.679-6.424zm13.714-31.801c0-2.508-.893-4.65-2.679-6.424-1.785-1.775-3.94-2.662-6.464-2.662-2.524 0-4.679.887-6.464 2.662-1.786 1.774-2.679 3.916-2.679 6.424 0 2.508.893 4.65 2.679 6.424 1.785 1.774 3.94 2.662 6.464 2.662 2.524 0 4.679-.888 6.464-2.662 1.786-1.775 2.679-3.916 2.679-6.424zM71.714 65.98l7.215-27.116c.285-1.23.107-2.378-.536-3.443-.643-1.064-1.56-1.762-2.75-2.094-1.19-.33-2.333-.177-3.429.462-1.095.639-1.81 1.573-2.143 2.804l-7.214 27.116c-2.857.237-5.405 1.266-7.643 3.088-2.238 1.822-3.738 4.152-4.5 6.992-.952 3.644-.476 7.098 1.429 10.364 1.905 3.265 4.69 5.37 8.357 6.317 3.667.947 7.143.474 10.429-1.42 3.285-1.892 5.404-4.66 6.357-8.305.762-2.84.619-5.607-.429-8.305-1.047-2.697-2.762-4.85-5.143-6.46zm47.143-2.342c0-2.508-.893-4.65-2.678-6.424-1.786-1.775-3.94-2.662-6.465-2.662-2.524 0-4.678.887-6.464 2.662-1.786 1.774-2.679 3.916-2.679 6.424 0 2.508.893 4.65 2.679 6.424 1.786 1.775 3.94 2.662 6.464 2.662 2.524 0 4.679-.887 6.465-2.662 1.785-1.775 2.678-3.916 2.678-6.424zm-45.714-45.43c0-2.509-.893-4.65-2.679-6.425C68.68 10.01 66.524 9.122 64 9.122c-2.524 0-4.679.887-6.464 2.661-1.786 1.775-2.679 3.916-2.679 6.425 0 2.508.893 4.65 2.679 6.424 1.785 1.774 3.94 2.662 6.464 2.662 2.524 0 4.679-.888 6.464-2.662 1.786-1.775 2.679-3.916 2.679-6.424zm32 13.629c0-2.508-.893-4.65-2.679-6.424-1.785-1.775-3.94-2.662-6.464-2.662-2.524 0-4.679.887-6.464 2.662-1.786 1.774-2.679 3.916-2.679 6.424 0 2.508.893 4.65 2.679 6.424 1.785 1.774 3.94 2.662 6.464 2.662 2.524 0 4.679-.888 6.464-2.662 1.786-1.775 2.679-3.916 2.679-6.424zM128 63.638c0 12.351-3.357 23.78-10.071 34.286-.905 1.372-2.19 2.058-3.858 2.058H13.93c-1.667 0-2.953-.686-3.858-2.058C3.357 87.465 0 76.037 0 63.638c0-8.613 1.69-16.847 5.071-24.703C8.452 31.08 13 24.312 18.714 18.634c5.715-5.68 12.524-10.199 20.429-13.559C47.048 1.715 55.333.035 64 .035c8.667 0 16.952 1.68 24.857 5.04 7.905 3.36 14.714 7.88 20.429 13.559 5.714 5.678 10.262 12.446 13.643 20.301 3.38 7.856 5.071 16.09 5.071 24.703z"></path>
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" id="icon-guide">
+            <path d="M1.482 70.131l36.204 16.18 69.932-65.485-61.38 70.594 46.435 18.735c1.119.425 2.397-.17 2.797-1.363v-.085L127.998.047 1.322 65.874c-1.12.597-1.519 1.959-1.04 3.151.32.511.72.937 1.2 1.107zm44.676 57.821L64.22 107.26l-18.062-7.834v28.527z"></path>
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" id="icon-list">
+            <path d="M1.585 12.087c0 6.616 3.974 11.98 8.877 11.98 4.902 0 8.877-5.364 8.877-11.98 0-6.616-3.975-11.98-8.877-11.98-4.903 0-8.877 5.364-8.877 11.98zM125.86.107H35.613c-1.268 0-2.114 1.426-2.114 2.852v18.255c0 1.712 1.057 2.853 2.114 2.853h90.247c1.268 0 2.114-1.426 2.114-2.853V2.96c0-1.711-1.057-2.852-2.114-2.852zM.106 62.86c0 6.615 3.974 11.979 8.876 11.979 4.903 0 8.877-5.364 8.877-11.98 0-6.616-3.974-11.98-8.877-11.98-4.902 0-8.876 5.364-8.876 11.98zM124.17 50.88H33.921c-1.268 0-2.114 1.425-2.114 2.851v18.256c0 1.711 1.057 2.852 2.114 2.852h90.247c1.268 0 2.114-1.426 2.114-2.852V53.73c0-1.426-.846-2.852-2.114-2.852zM.106 115.913c0 6.616 3.974 11.98 8.876 11.98 4.903 0 8.877-5.364 8.877-11.98 0-6.616-3.974-11.98-8.877-11.98-4.902 0-8.876 5.364-8.876 11.98zm124.064-11.98H33.921c-1.268 0-2.114 1.426-2.114 2.853v18.255c0 1.711 1.057 2.852 2.114 2.852h90.247c1.268 0 2.114-1.426 2.114-2.852v-18.255c0-1.427-.846-2.853-2.114-2.853z"></path>
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" id="icon-lock">
+            <path d="M119.88 49.674h-7.987V39.52C111.893 17.738 90.45.08 63.996.08 37.543.08 16.1 17.738 16.1 39.52v10.154H8.113c-4.408 0-7.987 2.94-7.987 6.577v65.13c0 3.637 3.57 6.577 7.987 6.577H119.88c4.407 0 7.987-2.94 7.987-6.577v-65.13c-.008-3.636-3.58-6.577-7.987-6.577zm-23.953 0H32.065V39.52c0-14.524 14.301-26.295 31.931-26.295 17.63 0 31.932 11.777 31.932 26.295v10.153z"></path>
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" id="icon-money">
+            <path d="M54.122 127.892v-28.68H7.513V87.274h46.609v-12.4H7.513v-12.86h38.003L.099 0h22.6l32.556 45.07c3.617 5.144 6.44 9.611 8.487 13.385 1.788-3.05 4.89-7.779 9.301-14.186L103.93 0h24.01L82.385 62.013h38.34v12.862h-46.41v12.4h46.41v11.937h-46.41v28.68H54.123z"></path>
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" id="icon-nested">
+            <path d="M.002 9.2c0 5.044 3.58 9.133 7.998 9.133 4.417 0 7.997-4.089 7.997-9.133 0-5.043-3.58-9.132-7.997-9.132S.002 4.157.002 9.2zM31.997.066h95.981V18.33H31.997V.066zm0 45.669c0 5.044 3.58 9.132 7.998 9.132 4.417 0 7.997-4.088 7.997-9.132 0-3.263-1.524-6.278-3.998-7.91-2.475-1.63-5.524-1.63-7.998 0-2.475 1.632-4 4.647-4 7.91zM63.992 36.6h63.986v18.265H63.992V36.6zm-31.995 82.2c0 5.043 3.58 9.132 7.998 9.132 4.417 0 7.997-4.089 7.997-9.132 0-5.044-3.58-9.133-7.997-9.133s-7.998 4.089-7.998 9.133zm31.995-9.131h63.986v18.265H63.992V109.67zm0-27.404c0 5.044 3.58 9.133 7.998 9.133 4.417 0 7.997-4.089 7.997-9.133 0-3.263-1.524-6.277-3.998-7.909-2.475-1.631-5.524-1.631-7.998 0-2.475 1.632-4 4.646-4 7.91zm31.995-9.13h31.991V91.4H95.987V73.135z"></path>
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" id="icon-shopping">
+            <path d="M42.913 101.36c1.642 0 3.198.332 4.667.996a12.28 12.28 0 0 1 3.89 2.772c1.123 1.184 1.987 2.582 2.592 4.193.605 1.612.908 3.318.908 5.118 0 1.8-.303 3.507-.908 5.118-.605 1.611-1.469 3.01-2.593 4.194a13.3 13.3 0 0 1-3.889 2.843 10.582 10.582 0 0 1-4.667 1.066c-1.729 0-3.306-.355-4.732-1.066a13.604 13.604 0 0 1-3.825-2.843c-1.123-1.185-1.988-2.583-2.593-4.194a14.437 14.437 0 0 1-.907-5.118c0-1.8.302-3.506.907-5.118.605-1.61 1.47-3.009 2.593-4.193a12.515 12.515 0 0 1 3.825-2.772c1.426-.664 3.003-.996 4.732-.996zm53.932.285c1.643 0 3.22.331 4.733.995a11.386 11.386 0 0 1 3.889 2.772c1.08 1.185 1.945 2.583 2.593 4.194.648 1.61.972 3.317.972 5.118 0 1.8-.324 3.506-.972 5.117-.648 1.611-1.513 3.01-2.593 4.194a12.253 12.253 0 0 1-3.89 2.843 11 11 0 0 1-4.732 1.066 10.58 10.58 0 0 1-4.667-1.066 12.478 12.478 0 0 1-3.824-2.843c-1.08-1.185-1.945-2.583-2.593-4.194a13.581 13.581 0 0 1-.973-5.117c0-1.801.325-3.507.973-5.118.648-1.611 1.512-3.01 2.593-4.194a11.559 11.559 0 0 1 3.824-2.772 11.212 11.212 0 0 1 4.667-.995zm21.781-80.747c2.42 0 4.3.355 5.64 1.066 1.34.71 2.29 1.587 2.852 2.63a6.427 6.427 0 0 1 .778 3.34c-.044 1.185-.195 2.204-.454 3.057-.26.853-.8 2.606-1.62 5.26a589.268 589.268 0 0 1-2.788 8.743 1236.373 1236.373 0 0 0-3.047 9.453c-.994 3.128-1.75 5.592-2.269 7.393-1.123 3.79-2.55 6.42-4.278 7.89-1.728 1.469-3.846 2.203-6.352 2.203H39.023l1.945 12.795h65.342c4.148 0 6.223 1.943 6.223 5.828 0 1.896-.41 3.53-1.232 4.905-.821 1.374-2.442 2.061-4.862 2.061H38.505c-1.729 0-3.176-.426-4.343-1.28-1.167-.852-2.14-1.966-2.917-3.34a21.277 21.277 0 0 1-1.88-4.478 44.128 44.128 0 0 1-1.102-4.55c-.087-.568-.324-1.942-.713-4.122-.39-2.18-.865-4.904-1.426-8.174l-1.88-10.947c-.692-4.027-1.383-8.079-2.075-12.154-1.642-9.572-3.5-20.234-5.574-31.986H6.87c-1.296 0-2.377-.356-3.24-1.067a9.024 9.024 0 0 1-2.14-2.558 10.416 10.416 0 0 1-1.167-3.2C.108 8.53 0 7.488 0 6.54c0-1.896.583-3.46 1.75-4.69C2.917.615 4.494 0 6.482 0h13.095c1.728 0 3.111.284 4.148.853 1.037.569 1.858 1.28 2.463 2.132a8.548 8.548 0 0 1 1.297 2.701c.26.948.475 1.754.648 2.417.173.758.346 1.825.519 3.199.173 1.374.345 2.772.518 4.193.26 1.706.519 3.507.778 5.403h88.678z"></path>
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" id="icon-star">
+            <path d="M70.66 4.328l14.01 29.693c1.088 2.29 3.177 3.882 5.603 4.25l31.347 4.76c6.087.926 8.528 8.756 4.117 13.247L103.05 79.395c-1.75 1.78-2.544 4.352-2.132 6.867l5.352 32.641c1.043 6.337-5.33 11.182-10.778 8.19l-28.039-15.409a7.13 7.13 0 0 0-6.91 0l-28.039 15.41c-5.448 2.99-11.821-1.854-10.777-8.19l5.352-32.642c.415-2.515-.387-5.088-2.136-6.867L2.264 56.278C-2.146 51.787.286 43.957 6.38 43.031l31.343-4.76c2.419-.368 4.51-1.96 5.595-4.25L57.334 4.328c2.728-5.77 10.605-5.77 13.325 0z"></path>
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" id="icon-theme">
+            <path d="M125.5 36.984L95.336 2.83C93.735 1.018 91.565 0 89.3 0c-2.263 0-4.433 1.018-6.033 2.83l-3.786 4.286c-1.6 1.812-3.77 2.83-6.032 2.831H54.553c-2.263 0-4.434-1.018-6.033-2.83L44.734 2.83C43.134 1.018 40.964 0 38.701 0c-2.263 0-4.434 1.018-6.034 2.83L2.5 36.984C.9 38.796 0 41.254 0 43.815c0 2.562.899 5.02 2.5 6.831L14.565 64.31c2.178 2.468 5.367 3.403 8.33 2.444 1.35-.435 2.709.592 2.709 2.18v49.407c0 5.313 3.84 9.66 8.532 9.66h59.726c4.693 0 8.532-4.347 8.532-9.66V68.934c0-1.59 1.36-2.616 2.71-2.181 2.962.96 6.15.024 8.329-2.444L125.5 50.646c1.6-1.811 2.499-4.269 2.499-6.83 0-2.563-.899-5.02-2.5-6.832z"></path>
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 130" id="icon-user">
+            <path d="M63.444 64.996c20.633 0 37.359-14.308 37.359-31.953 0-17.649-16.726-31.952-37.359-31.952-20.631 0-37.36 14.303-37.358 31.952 0 17.645 16.727 31.953 37.359 31.953zM80.57 75.65H49.434c-26.652 0-48.26 18.477-48.26 41.27v2.664c0 9.316 21.608 9.325 48.26 9.325H80.57c26.649 0 48.256-.344 48.256-9.325v-2.663c0-22.794-21.605-41.271-48.256-41.271z" stroke="#979797"></path>
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 110" id="icon-wechat">
+            <path d="M86.635 33.334c1.467 0 2.917.113 4.358.283C87.078 14.392 67.58.111 45.321.111 20.44.111.055 17.987.055 40.687c0 13.104 6.781 23.863 18.115 32.209l-4.527 14.352 15.82-8.364c5.666 1.182 10.207 2.395 15.858 2.395 1.42 0 2.829-.073 4.227-.189-.886-3.19-1.398-6.53-1.398-9.996 0-20.845 16.98-37.76 38.485-37.76zm-24.34-12.936c3.407 0 5.665 2.363 5.665 5.954 0 3.576-2.258 5.97-5.666 5.97-3.392 0-6.795-2.395-6.795-5.97 0-3.591 3.403-5.954 6.795-5.954zM30.616 32.323c-3.393 0-6.818-2.395-6.818-5.971 0-3.591 3.425-5.954 6.818-5.954 3.392 0 5.65 2.363 5.65 5.954 0 3.576-2.258 5.97-5.65 5.97z"></path>
+            <path d="M127.945 70.52c0-19.075-18.108-34.623-38.448-34.623-21.537 0-38.5 15.548-38.5 34.623 0 19.108 16.963 34.622 38.5 34.622 4.508 0 9.058-1.2 13.584-2.395l12.414 7.167-3.404-11.923c9.087-7.184 15.854-16.712 15.854-27.471zm-50.928-5.97c-2.254 0-4.53-2.362-4.53-4.773 0-2.378 2.276-4.771 4.53-4.771 3.422 0 5.665 2.393 5.665 4.771 0 2.41-2.243 4.773-5.665 4.773zm24.897 0c-2.24 0-4.498-2.362-4.498-4.773 0-2.378 2.258-4.771 4.498-4.771 3.392 0 5.665 2.393 5.665 4.771 0 2.41-2.273 4.773-5.665 4.773z"></path>
+        </symbol>
+        <symbol class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="icon-donate">
+            <path d="M799.835567 409.343969c-7.124258 0-17.45658 1.125637-26.720571 0-51.567469 15.005762-88.169085 59.042721-106.883309 106.749256-23.420409-29.151947-62.499449-52.284807-106.883309-53.374628-5.526877 1.088798-15.553231 2.187829-26.720572 0-75.839269 22.039969-132.216277 117.15628-120.243594 200.153576 32.484855 177.732937 359.762737 234.369865 360.730784 253.528204-0.968048 15.081487 15.32094-79.065753 66.802452-160.122861 51.226708-80.33977 121.281227-110.282732 106.883309-226.841402-13.123902-72.211649-76.882018-120.089076-146.96519-120.092145zM345.58176 903.057487c-0.069585 0-0.159636-0.097214-0.241501-0.152473-0.11461 0.100284-0.048095 0.152473 0.241501 0.152473z" p-id="2338"></path>
+            <path d="M733.033116 129.128963c-115.27442-8.884344-205.739804 94.891184-253.848499 173.466773-28.197202-65.910129-108.804055-148.775418-173.685761-146.778948-111.029746-0.483001-231.309156 76.278267-240.48719 213.497489C54.354955 565.682643 190.689017 610.455359 265.419022 729.590713c49.859571 75.175143 75.201749 170.110329 79.921237 173.314301 1.494027-1.316995 37.989219-12.054547 120.485095-53.222155-58.424644-36.85028-103.33346-92.574419-120.243594-160.122861-15.33015-119.972419 42.422182-261.34831 146.965189-280.216029 27.203572-11.225669 95.869465-34.045397 160.325475 26.686802 29.960359-66.275449 71.678506-82.142835 120.243595-93.405343 9.8176-1.951445 23.158443-3.786233 40.080858 0 53.009308-3.783163 105.278765 18.951631 146.965189 53.374628-2.736321-9.131985-1.047866-20.48352 0-26.686802 7.274684-149.553131-88.768743-228.409107-227.12895-240.184291z" p-id="2339"></path>
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" id="icon-flag">
+            <path d="M56.888889 56.888889h113.777778v910.222222H56.888889zM227.555556 170.666667v512c227.555556-227.555556 512 227.555556 739.555555 0V170.666667c-227.555556 227.555556-512-227.555556-739.555555 0z" fill="" p-id="1096"></path>
+        </symbol>
+    </svg>
+    <div id="app">
+        <div class="app-container">
+            <!--左边导航-->
+            <div id="nav-scroll" style="display:none;" v-show="isCreated">
+                <el-scrollbar class="sidebar-container" wrap-class="scrollbar-wrapper">
+                    <img alt="泡泡交友" v-bind:class="isCollapse?'sidebar-logo--mini':'sidebar-logo'" src="//j.vzan.cc/content/images/2018-11-30/paopao-logo.png" />
+                    <el-menu :collapse="isCollapse"
+                             :default-active="defIndex"
+                             unique-opened
+                             background-color="#fff"
+                             text-color="#000"
+                             active-text-color="#fff"
+                             @@open="menuOpen"
+                             @@close="menuClose"
+                             @@select="menuSelect">
+                        <template v-for="item,index in menus">
+                            <el-menu-item :index="(index+1)+''" class="submenu-title-noDropdown" v-if="!item.children||item.children.length==0">
+                                <svg aria-hidden="true" class="svg-icon">
+                                    <use v-bind:xlink:href="item.icon"></use>
+                                </svg>
+                                <span slot="title">{{item.title}}</span>
+                            </el-menu-item>
+                            <el-submenu :index="(index+1)+''" v-else>
+                                <template slot="title">
+                                    <svg aria-hidden="true" class="svg-icon">
+                                        <use v-bind:xlink:href="item.icon"></use>
+                                    </svg>
+                                    <span slot="title">{{item.title}}</span>
+                                </template>
+                                <el-menu-item v-for="(item2,index2) in item.children" :index="(index+1)+'-'+(index2+1)" v-if="item2.show">{{item2.title}}</el-menu-item>
+                            </el-submenu>
+                        </template>
+                    </el-menu>
+                </el-scrollbar>
+            </div>
+            <!--右边内容-->
+            <div class="main-container">
+                <!--头部-->
+                <div id="header" style="display:none;" v-show="isCreated">
+                    <el-header height="50px">
+                        <div style="padding: 0px 15px;" class="hamburger-container" @@click="toggleMenu">
+                            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="64" height="64" class="hamburger" v-bind:class="{'is-active':hideMenu}">
+                                <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM142.4 642.1L298.7 519a8.84 8.84 0 0 0 0-13.9L142.4 381.9c-5.8-4.6-14.4-.5-14.4 6.9v246.3a8.9 8.9 0 0 0 14.4 7z"></path>
+                            </svg>
+                        </div>
+                        <el-breadcrumb separator-class="el-icon-arrow-right" class="app-breadcrumb">
+                            <el-breadcrumb-item v-for="item in breadcrumb">{{item.title}}</el-breadcrumb-item>
+                        </el-breadcrumb>
+                        <div class="right-menu">
+                            <div class="right-menu--item">
+                                <i class="el-icon-menu el-color-primary"></i>
+                                <span><a href="https://user.vzan.com/member/myworkbench" class="el-color-primary">管理后台</a></span>
+                            </div>
+                            <div class="right-menu--item">
+                                @if (Model.IsCreate)
+                                {
+                                    <span>
+                                        超级管理员(创建者)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>
+                                        管理员
+                                    </span>
+                                }
+                            </div>
+                            <el-dropdown>
+                                <span class="el-dropdown-link">
+                                    @fuser.nickname<i class="el-icon-arrow-down el-icon--right"></i>
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item>
+                                        <a href="/Home/logout" class="el-color-info">退出</a>
+                                    </el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </div>
+                    </el-header>
+                </div>
+                <!--引用内容-->
+                <div class="el-main">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var navBar = null, headerBar=null, breadcrumb=[];
+        navBar  = new Vue({
+            el: "#nav-scroll",
+            data: {
+                isCollapse: false, //收起
+                defIndex: '@(ViewBag.menuIndex==null?"1": ViewBag.menuIndex)',
+                mid:@Model.Minisns.Id,
+                sPath: [],
+                isCreated: false,
+                menus: [
+                    { title: "泡泡首页", url: "/friend/index", icon: "#icon-dashboard", children: [] },
+                    {
+                        title: "平台管理", url: "", icon: "#icon-guide", children: [
+                            { title: "平台基本设置", url: "/friend/pset", icon: "",show: true },
+                            { title: "首页参数设置", url: "/friend/iset", icon: "", show: true },
+                            { title: "运营参数设置", url: "/friend/yset", icon: "", show: true },
+                            { title: "奖励设置", url: "/friend/inviteset", icon: "", show: true },
+                            { title: "相亲参数设置", url: "/xq/set", icon: "", show: true },
+                            { title: "VIP参数设置", url: "/friend/vipset", icon: "", show: true },
+                            { title: "用户私聊设置", url: "/friend/chatset", icon: "", show: true },
+                            { title: "首页轮播图设置", url: "/friend/imgset", icon: "", show: true },
+                            { title: "独立域名&独立支付", url: "/serviceprovider/domainserver", icon: "", show: @(!isAreaAgent ? "true":"false")}
+                        ]
+                    },
+                    {
+                        title: "用户管理", url: "", icon: "#icon-user", children: [
+                            { title: "交友用户管理", url: "/friend/userlist", icon: "", show: true },
+                            { title: "相亲用户管理", url: "/xq/list", icon: "", show: true},
+                            { title: "马甲管理", url: "/sockpuppet/userlist", icon: "", show: true}]
+                    },
+                    {
+                        title: "婚介所管理", url: "", icon: "#icon-donate", children: [
+                            { title: "红娘入驻审核", url: "/matchagency/audit", icon: "", show: true},
+                            { title: "红娘管理", url: "/matchagency/manage", icon: "", show: true }
+                        ]
+                    },
+                    {
+                        title: "交友圈管理", url: "", icon: "#icon-wechat", children: [
+                            { title: "交友圈动态列表", url: "/friend/dlist", icon: "", show: true},
+                            { title: "交友圈标签管理", url: "/friend/tagset", icon: "", show: true},
+                            { title: "交友圈列表参数设置", url: "/friend/dset", icon: "", show: true}
+                        ]
+                    },
+                    {
+                        title: "审核管理", url: "", icon: "#icon-lock", children: [
+                            { title: "相册审核", url: "/friend/photolist", icon: "", show: true },
+                            { title: "VCR审核", url: "/friend/vcrlist", icon: "", show: true},
+                            { title: "投诉管理", url: "/friend/complainlist", icon: "", show: true}
+                        ]
+                    },
+                    {
+                        title: "自助广告管理", url: "", icon: "#icon-star", children: [
+                            { title: "自助广告列表", url: "/friend/advertlist", icon: "", show: true}
+                        ]
+                    },
+                    {
+                        title: "工具管理", url: "", icon: "#icon-component", children: [
+                            { title: "公告管理", url: "/friend/noticemanage", icon: "", show: true},
+                            { title: "礼物管理", url: "/friend/giftlist", icon: "", show: true},
+                            { title: "投票管理", url: "/friendvote/votemanage", icon: "", show: true},
+                            { title: "日签卡管理", url: "/dailysign/cardlist", icon: "", show: true},
+                            { title: "报名表", url: "/friend/applylist", icon: "", show: true},
+                            { title: "报名帖", url: "/friend/applyformlist", icon: "", show: true}
+                        ]
+                    },
+                    {
+                        title: "数据统计", url: "", icon: "#icon-chart", children: [
+                            { title: "收益明细", url: "/friend/olists", icon: "", show: true},
+                            { title: "用户开通服务记录", url: "/friend/serviceRecord", icon: "", show: true},
+                            { title: "用户数据分析", url: "/friend/ud", icon: "", show: true},
+                            { title: "平台红包领取情况", url: "/friend/redbagLog", icon: "", show: true},
+                            { title: "区域抽成收益", url: "/friend/agentolist", icon: "", show: @(isCityAgent ? "true":"false") },
+                            { title: "区域收益明细", url: "", icon: "", show: false }
+                        ]
+                    },
+                    {
+                        title: "活动管理", url: "", icon: "#icon-flag", children: [
+                            { title: "活动模板", url: "/friend/activitytemplate", icon: "", show: true},
+                            { title: "发布活动", url: "/friend/postactivity", icon: "", show: true},
+                            { title: "活动列表", url: "/friend/activitylist", icon: "", show: true}
+                        ]
+                    }
+                ],
+            },
+            methods: {
+                menuClose(key, arr) {
+                    //console.log(key,arr)
+                },
+                menuOpen(key, arr) {
+                    //console.log(key, arr)
+                },
+                //导航选择事件
+                menuSelect(key, paths) {
+                    //console.log(key, paths);
+                    this.defIndex = key;
+                    this.sPath = paths;
+                    if (key) {
+                        var routers = key.split("-");
+                        if (routers) {
+                            headerBar && (headerBar.breadcrumb = []);
+                            breadcrumb = [];
+                            for (var i in routers) {
+                                var item = this.menus[routers[0] - 1];
+                                var title = i == 0 ? item.title : item.children[routers[i] - 1].title;
+                                var url = i == 0 ? item.url : item.children[routers[i] - 1].url;
+                                if (headerBar) {
+                                    headerBar.breadcrumb.push({ title: title, url: url });
+                                } else {
+                                    breadcrumb.push({ title: title, url: url });
+                                }
+                                if (url && paths) {
+                                   window.location.href = url + "/" + this.mid;
+                                }
+                            }
+                        }
+                    }
+                },
+            },
+            mounted() {
+                this.menuSelect(this.defIndex, "");
+                this.isCreated = true;
+            }
+        });
+        headerBar = new Vue({
+            el: "#header",
+            data: {
+                breadcrumb: [],
+                isCreated: false
+            },
+            computed: {
+                hideMenu() {
+                    return navBar.isCollapse;
+                }
+            },
+            methods: {
+                toggleMenu() {
+                    navBar.isCollapse = !navBar.isCollapse;
+                    if (navBar.isCollapse)
+                        $("#app .app-container").addClass("hideSidebar");
+                    else
+                        $("#app .app-container").removeClass("hideSidebar");
+                }
+            },
+            mounted() {
+                if (breadcrumb.length > 0) {
+                    this.breadcrumb = breadcrumb;
+                }
+                this.isCreated = true;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -671,6 +671,21 @@ def clientht(rows, key):
     fout.writelines(sb)
     fout.close()
 
+def clientht2(rows, key):
+    sb = []
+    sb.append('@model WebUI.MiniSNSAdmin.Model.FriendViewModel'+'\n')
+    sb.append('@{'+'\n')
+    sb.append('    ViewBag.Title = "'+tnames[key]+'";'+'\n')
+    sb.append('    ViewBag.menuIndex = "";'+'\n')
+    sb.append('    Layout = "_BaseLayout.cshtml;'+'\n')
+    sb.append('}'+'\n')
+    sb.append(''+'\n')    
+    sb.append(''+'\n')
+    sb.append(''+'\n')
+    fout = open(filepath + '/'+key+'-clientht2.txt', "w", encoding='utf-8')
+    fout.writelines(sb)
+    fout.close()
+
 def serverht(rows, key):
     sb = []
     sb.append('        /// <summary>'+'\n')
