@@ -84,6 +84,7 @@ def entity(rows, key):
 
 def bll(rows, key):
     sb = []
+    sb.append('using System;'+'\n')
     sb.append('using DAL.Base;'+'\n')
     sb.append('using Entity.MiniSNS.Friend;'+'\n')
     sb.append('using System.Collections.Generic;'+'\n')
