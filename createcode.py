@@ -8,12 +8,12 @@ import os
 
 cdate = datetime.datetime.now().strftime('%Y-%m-%d')
 
-filepath = 'C:/Users/EDZ/Desktop/'+cdate
+filepath = 'C:/Users/vzan/Desktop/'+cdate
 isExists=os.path.exists(filepath)
 if not isExists:
     os.makedirs(filepath)
 
-workbook = xlrd.open_workbook(r'C:\Users\EDZ\Desktop\basetable.xlsx')
+workbook = xlrd.open_workbook(r'C:\Users\vzan\Desktop\basetable.xlsx')
 excels = workbook.sheet_by_index(0)
 tables = {}
 tnames = {}
