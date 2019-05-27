@@ -13,3 +13,31 @@ function isAndroid_ios() {
     var u = navigator.userAgent, isAndroid = u.indexOf('Android') > -1; //ios终端  
     return isAndroid;
 }
+
+this.$set(item, 'name', value);
+
+#if DEBUG
+    log4net.LogHelper.WriteInfo(GetType(), "");
+#endif
+
+list.find((item) => item.code == 1);
+
+TO_DAYS(create_time) =TO_DAYS(NOW())
+
+DATE_FORMAT(addtime,'%Y%m%d')='20190301'
+
+IF(Id<1,1,Id)
+
+<!--微信调试器-->
+<script src="https://cdn.bootcss.com/vConsole/3.2.0/vconsole.min.js"></script>
+<script type="text/javascript">
+    var vConsole = new VConsole();
+</script>
+
+//禁止输入中文
+inputCheck(value) {
+    return value.replace(/[\u4E00-\u9FA5]/g, '');
+}
+
+
+ onerror="this.src='http://j.vzan.cc/content/images/default_user_head2.png';"
