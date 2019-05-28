@@ -137,13 +137,13 @@ def database(rows):
         if row[4] == 'int' or row[4] == 'varchar':
             if row[4] == 'int' and row[7] == 'y':
                 sb.append('  `' + row[3] + '` ' + row[4] + '(' + str(int(row[5])) + ')  ' + (
-                    'NOT NULL' if row[9] == 'y' else '') + ' ' + ('AUTO_INCREMENT' if row[7] == 'y' else '')+',' + '\n')
+                    'NOT NULL' if row[9] == 'y' else '') + ' ' + ('AUTO_INCREMENT' if row[7] == 'y' else '')+' COMMENT \''+ row[2] +'\',' + '\n')
             else:
                 sb.append('  `' + row[3] + '` ' + row[4] + '(' + str(int(row[5])) + ') ' + (
-                    'NOT NULL' if row[9] == 'y' else '') + ',' + '\n')
+                    'NOT NULL' if row[9] == 'y' else '') + 'COMMENT \''+ row[2] +'\',' + '\n')
         else:
             sb.append('  `' + row[3] + '` ' + row[4] + ' ' +
-                      ('NOT NULL' if row[9] == 'y' else '') + ','+'\n')
+                      ('NOT NULL' if row[9] == 'y' else '') + 'COMMENT \''+ row[2] +'\','+'\n')
     pkeycol = list(filter(lambda x: x[6] == 'y', rows))
     indexcol = list(filter(lambda x: x[8] == 'y', rows))
     if pkeycol != None:
@@ -153,7 +153,7 @@ def database(rows):
             sb.append('  PRIMARY KEY (`' + pkeycol[0][3] + '`)'+'\n')
     ikey = []
     for ic in indexcol:
-        ikey.append('  `' + ic[3] + '`')
+        ikey.append(' `' + ic[3] + '`')
     sb.append('  KEY `Key_Index` (' +
               str(ikey).replace('[', '').replace(']', '').replace("'", '')+')'+'\n')
     sb.append(') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;'+'\n')
