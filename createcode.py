@@ -6,14 +6,19 @@ import math
 import datetime
 import os
 
+def GetDesktopPath():
+    return os.path.join(os.path.expanduser("~"), 'Desktop')
+
+deskPath = GetDesktopPath()
+
 cdate = datetime.datetime.now().strftime('%Y-%m-%d')
 
-filepath = 'C:/Users/vzan/Desktop/'+cdate
+filepath = deskPath + '\\' +cdate
 isExists=os.path.exists(filepath)
 if not isExists:
     os.makedirs(filepath)
 
-workbook = xlrd.open_workbook(r'C:\Users\vzan\Desktop\basetable.xlsx')
+workbook = xlrd.open_workbook(r''+deskPath+'\\basetable.xlsx')
 excels = workbook.sheet_by_index(0)
 tables = {}
 tnames = {}
