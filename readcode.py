@@ -7,12 +7,13 @@ def GetDesktopPath():
     return os.path.join(os.path.expanduser("~"), 'Desktop')
 
 cdate = datetime.datetime.now().strftime('%Y-%m-%d')
-filepath = GetDesktopPath() + '\\'+ cdate
+deskpath = GetDesktopPath()
+filepath = deskpath + '\\'+ cdate + '-Read'
 isExists=os.path.exists(filepath)
 if not isExists:
     os.makedirs(filepath)
 
-readfile = open(r'C:\work\Friend-0817\User.MiniSNS\Views\Friend\activitylist.cshtml','r', encoding='UTF-8')     
+readfile = open(r''+ deskpath +'\\complainlist.cshtml','r', encoding='UTF-8')     
 lines =readfile.readlines()
 clist=[]
 for line in lines:
