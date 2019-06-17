@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="yes" name="apple-touch-fullscreen">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="utf-8">
+    <title>分享海报</title>
+</head>
+<body>
+    <script src="@WebSiteConfig.SourceContent/scripts/jquery2.1.4/jquery.min.js"></script>
+    <script src="@(WebSiteConfig.SourceContent)/content/minisns/js/vue.js"></script>
+    <script src="@WebSiteConfig.SourceContent/zhibo/livecontent/plugin/html2canvas.min.js"></script>
+    <style>
+        html, body, div {
+            padding: 0;
+            margin: 0;
+        }
+
+        i, span {
+            font-style: normal
+        }
+    </style>
+    <div id="main" style="display:none;" v-show="isCreated">
+        <div style="margin:1rem;">
+            <img ref="showimage" style="width:100%;" />
+            <p style="display:none;font-size:16px;text-align:center;" v-show="loading"><img src="@WebSiteConfig.SourceContent/content/images/loading_32.gif" /></p>
+            <p style="display:none;font-size:16px;text-align:center;" v-show="loading">海报生成中……</p>
+            <div style="color: #666;">
+                <p v-show="money>0 && isFx==1 && !loading" style="font-size: 14px;">分销预收益：<i style="color:#F90606;font-weight: bold">￥{{money}}</i></p>
+                <p v-show="money>0 && isFx==1 && !loading" style="font-size:12px;line-height: 1.3">注：通过你的分销海报购买单品时，你可以获取的分成金额。购买越多，分成金额越高</p>
+                <p v-show="!loading" class="ta-c" style="font-size:14px;text-align:center;color: #4a4848;">长按图片发送给朋友或保存到相册分享朋友圈</p>
+            </div>
+        </div>        
+        <!--商品-->
+        <div v-else-if="pageType==6">
+            <!--400x400图-->
+            <div ref="postbody" v-if="goodsImg.indexOf('!400x400')>-1" v-show="showBody" style="margin-top:100rem;width:588px;height:1054px;position: relative;">
+                <img :src="getImgUrl('http://yzx.vzan.com/Content/poster/img/poster01.png')" style="position: absolute;display: block;top: 0;left: 0;width: 100%;">
+                <div style="text-align:center;padding: 20px 0 0;">
+                    <img ref="refCityLogo" v-show="cityLogo!=''" style="display: inline-block;width: 80px;height: 80px;border-radius: 50%;margin: 0 10px 0 0;vertical-align: -25px;">
+                    <span style="font-size:30px;">{{cityName}}</span>
+                </div>
+                <p style="font-size:1.6rem;font-weight:bold;text-align:center;">{{cityTip}}</p>
+                <div style="margin:0 44px 20px;">
+                    <img ref="refGoodsImg" style="display:block;width:100%;">
+                </div>
+                <div style="margin: 0 44px;">
+                    <div style="display:block;font-size:32px;margin:10px 0;">{{goodsName}}</div>
+                    <div style="margin:20px 0 10px;height:42px;">
+                        <div style="background:#F90606;color: #fff;display:block;width: 90px;height: 36px;text-align: center;border-radius: 5px;line-height:36px;float: left;font-size: 24px;">{{typeName}}</div>
+                        <div style="font-size: 48px;color:#F90606;float: left;margin: -15px 0 0 10px;font-weight: bold"><i style="font-size:32px;font-weight: normal">￥</i>{{goodsActPrice}}</div>
+                        <div style="font-size: 28px;color: #999;text-decoration: line-through;float: left;margin: 0 0 0 10px;">￥{{goodsPrice}}</div>
+                    </div>
+                    <div style="overflow: hidden;">
+                        <img ref="refUserImg" style="display:block;width:64px;height:64px;border-radius: 50%;float: left;margin: 34px 0 0;">
+                        <img ref="refQrcode" style="display:block;height:170px;width:170px;float: right;">
+                        <div style="position: relative; background: #FF5A00;color: #fff;height: 40px;line-height: 40px;width: 188px;border-radius: 8px;text-align: center;float: left;margin: 44px 0 0 26px;">
+                            {{userTip}}
+                            <img :src="getImgUrl('http://yzx.vzan.com/Content/poster/img/poster17.png')" style="display:block;width:17px;height:22px;float: left;margin: 34px 0 0;position: absolute;left: -17px;top: -25px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--640x360图-->
+            <div ref="postbody" v-else v-show="showBody" style="margin-top:100rem;width:640px;height:933px;position: relative;">
+                <img :src="getImgUrl('http://yzx.vzan.com/Content/poster/img/poster03.png')" style="position: absolute;display: block;top: 0;left: 0;width: 100%;height: 100%;">
+                <div style="text-align:center;padding: 20px 0 0;">
+                    <img ref="refCityLogo" v-show="cityLogo!=''" style="display: inline-block;width: 80px;height: 80px;border-radius: 50%;margin: 0 10px 0 0;vertical-align: -25px;">
+                    <span style="font-size:30px;">{{cityName}}</span>
+                </div>
+                <p style="font-size:1.6rem;font-weight:bold;text-align:center;">{{cityTip}}</p>
+                <div style="margin:0 10px 20px;">
+                    <img ref="refGoodsImg" style="display:block;width:100%;">
+                </div>
+                <div style="margin: 0 44px;">
+                    <div style="display:block;font-size:32px;margin:10px 0;">{{goodsName}}</div>
+                    <div style="margin:20px 0 10px;height:42px;">
+                        <div style="background:#F90606;color: #fff;display:block;width: 90px;height: 36px;text-align: center;border-radius: 5px;line-height:36px;float: left;font-size: 24px;">{{typeName}}</div>
+                        <div style="font-size: 48px;color:#F90606;float: left;margin: -15px 0 0 10px;"><i style="font-size:32px;">￥</i>{{goodsActPrice}}</div>
+                        <div style="font-size: 28px;color: #999;text-decoration: line-through;float: left;margin: 0 0 0 10px;">￥{{goodsPrice}}</div>
+                    </div>
+                    <div style="overflow: hidden;">
+                        <img ref="refUserImg" style="display:block;width:64px;height:64px;border-radius: 50%;float: left;margin: 34px 0 0;">
+                        <img ref="refQrcode" style="display:block;height:170px;width:170px;float: right;">
+                        <div style="position: relative; background: #FF5A00;color: #fff;height: 40px;line-height: 40px;width: 188px;border-radius: 8px;text-align: center;float: left;margin: 44px 0 0 26px;">
+                            {{userTip}}
+                            <img :src="getImgUrl('http://yzx.vzan.com/Content/poster/img/poster17.png')" style="display:block;width:17px;height:22px;float: left;margin: 34px 0 0;position: absolute;left: -17px;top: -25px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--店铺-->
+        <div v-if="pageType==7" style="padding: 1.5rem;">
+        </div>
+    </div>
+    <script type="text/javascript">
+    $(function () {
+        var vm = new Vue({
+            el: "#main",
+            data: {
+                isCreated: false,
+                pageType: '',
+                money: '',
+                isFx: '',
+                cityLogo:'@Model.CityLogo',
+                cityName: '@Model.CityName',
+                cityTip: '吃喝玩乐购尽在此',
+                goodsImg: '@Model.ImgUrl',
+                goodsName: '@Model.Title',
+                typeName: '优惠价',
+                goodsPrice: '@(Model.OriginalPrice * 0.01)',
+                goodsActPrice: '@(Model.LowPrice * 0.01)',
+                userImg: '@Model.UserImg',
+                userTip:'为你推荐一个好货',
+                storeLogo: '@Model.StoreLogo',
+                rushName: '抢购时间',
+                rushTime: '@Model.RushTime',
+                qrcodeUrl:'@Model.QrCodeUrl',
+                showBody: true,
+                loading: true,
+                images: {
+                    cityimg: '',
+                    goodsimg: '',
+                    userimg: '',
+                    qrcode:'',
+                }
+            },
+            methods: {
+                loadData() {
+                    var self = this;
+                    self.preLoadImg(self.getImgUrl(self.cityLogo))(function (image) {
+                        self.images.cityimg = image;
+                    });
+                    self.preLoadImg(self.getImgUrl(self.goodsImg))(function (image) {
+                        self.images.goodsimg = image;
+                    });
+                    self.preLoadImg(self.getImgUrl(self.userImg))(function (image) {
+                        self.images.userimg = image;
+                    });
+                    self.preLoadImg(self.getQrCode(self.qrcodeUrl, self.storeLogo))(function (image) {
+                        self.images.qrcode = image;
+                    });
+
+                    self.money = parseInt(self.getQueryString("money"));
+                    self.isFx = parseInt(self.getQueryString("IsFx"));
+                    if (self.pageType == 1) {
+                        self.userTip = '商品有价，爱心无价';
+                        self.typeName = '爱心价';
+                    } else if (self.pageType == 2) {
+                        self.userTip = '没有最低，只有更低';
+                        self.typeName = '减价';
+                    } else if (self.pageType == 3) {
+                        self.userTip = '独乐乐不如众乐乐';
+                        self.typeName = '拼团价';
+                    } else if (self.pageType == 4) {
+                        self.userTip = '限时优惠，早买早享';
+                        self.typeName = '优惠价';
+                    }                    
+                },
+                getQueryString(name) {
+                    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                    var reg_rewrite = new RegExp("(^|/)" + name + "/([^/]*)(/|$)", "i");
+                    var r = window.location.search.substr(1).match(reg);
+                    var q = window.location.pathname.substr(1).match(reg_rewrite);
+                    if (r != null) {
+                        return unescape(r[2]);
+                    } else if (q != null) {
+                        return unescape(q[2]);
+                    } else {
+                        return null;
+                    }
+                },
+                getImgUrl(url) {
+                    return '/icapi/getimagestream?url=' + encodeURIComponent(url);
+                },
+                getQrCode(url,logo) {
+                    return '/icapi/getshareqrcode?url=' + encodeURIComponent(url) + '&logourl=' + encodeURIComponent(logo);
+                },
+                preLoadImg(imgSrc) {
+                    var newImg = new Image();
+                    newImg.src = imgSrc;
+                    newImg.crossOrigin = "Anonymous";
+                    return function (fn) {
+                        newImg.onload = function (e) {
+                            fn(newImg)
+                        }
+                    }
+                },
+                createCard() {
+                    var self = this;
+                    if (self.images.goodsimg) {
+                        self.$refs.refGoodsImg.src = self.images.goodsimg.src;
+                    }
+                    if (self.images.cityimg) {
+                        self.$refs.refCityLogo.src = self.images.cityimg.src;
+                    }
+                    if (self.images.userimg) {
+                        self.$refs.refUserImg.src = self.images.userimg.src;
+                    }
+                    if (self.images.qrcode) {
+                        self.$refs.refQrcode.src = self.images.qrcode.src;
+                    }
+                    html2canvas(self.$refs.postbody, {
+                        useCORS: true,
+                        onrendered: function (canvas) {
+                            try {
+                                self.$refs.showimage.src = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+                                self.showBody = false;
+                                self.loading = false;
+                                console.log('render end');
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        }
+                    });
+                }
+            },
+            watch: {
+                images: {
+                    handler(newObj, oldObj) {
+                        if (newObj.goodsimg != '' && newObj.userimg != '' && newObj.qrcode != '') {
+                            this.$nextTick(function () {
+                                this.createCard();
+                                console.log('render');
+                            });
+                        }
+                    },
+                    deep: true
+                },
+            },
+            beforeMount() {
+                this.loadData();
+            },
+            mounted() {
+                var self = this;
+                //self.loadData();
+                //setTimeout(function () {
+                //    self.createCard();
+                //}, 1000);
+            },
+            created: function () {
+                this.isCreated = true;
+            }
+        });
+    });
+    </script>
+    <script src="https://cdn.bootcss.com/vConsole/3.2.0/vconsole.min.js"></script>
+    <script type="text/javascript">
+        var vConsole = new VConsole();
+    </script>
+</body>
+</html>
+
+/// <summary>
+        /// 根据链接获取图片文件流
+        /// </summary>
+        /// <returns></returns>
+        public FileResult getimagestream(string url = "")
+        {
+            if (!string.IsNullOrEmpty(url))
+            {
+                try
+                {
+                    MemoryStream ms = new MemoryStream(Utility.HttpHelper.DowloadImageFiles(url));
+                    return File(ms.ToArray(), "image/jpeg");
+                }
+                catch (Exception ex)
+                {
+                    log4net.LogHelper.WriteError(this.GetType(), ex);
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 分享二维码 带头像
+        /// </summary>
+        /// <returns></returns>
+        public FileResult getshareqrcode(string url = "",string logourl = "")
+        {   
+            if(string.IsNullOrEmpty(url) || string.IsNullOrEmpty(logourl))
+            {
+                return null;
+            }
+            try
+            {
+                url = Server.UrlDecode(url);
+                MemoryStream ms = new MemoryStream();
+                Bitmap bmp = QRCodeHelp.Instance.GetQrCodeImg(logourl, url);
+                bmp.Save(ms, ImageFormat.Jpeg);
+                bmp.Dispose();
+                return File(ms.ToArray(), "image/jpeg");
+            }
+            catch (Exception)
+            {
+                MemoryStream ms = new MemoryStream();
+                Bitmap bmp = QRCodeHelp.Instance.GetQrCodeImg(WebSiteConfig.SourceContent + "/content/friend/20181201/img/dt-default.png", url);
+                bmp.Save(ms, ImageFormat.Jpeg);
+                bmp.Dispose();
+                return File(ms.ToArray(), "image/jpeg");
+            }
+        }
