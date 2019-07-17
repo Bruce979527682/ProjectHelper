@@ -1,4 +1,5 @@
 onkeyup="value=value.replace(/\D/g,'')"
+ onkeyup="value=value.replace(/[^\d\.]/g,'')"
 
 function GetQueryString(name,def) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
