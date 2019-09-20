@@ -42,3 +42,178 @@ inputCheck(value) {
 
 
  onerror="this.src='http://j.vzan.cc/content/images/default_user_head2.png';"
+
+ convertData(time, hasSecond) {
+                    if (time == undefined) {
+                        return "";
+                    }
+                    var date = new Date(parseInt(time.substr(6, 13))); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                    var y = date.getFullYear();
+                    var m = date.getMonth() + 1;
+                    m = m < 10 ? ("0" + m) : m;
+                    var d = date.getDate();
+                    d = d < 10 ? ("0" + d) : d;
+                    var h = date.getHours();
+                    h = h < 10 ? ("0" + h) : h;
+                    var minute = date.getMinutes();
+                    var second = date.getSeconds();
+                    minute = minute < 10 ? ("0" + minute) : minute;
+                    second = second < 10 ? ("0" + second) : second;
+                    var ntime = y + "-" + m + "-" + d + " " + h + ":" + minute + (hasSecond ? ":" + second : '');
+                    if (ntime == "1950-04-24" || ntime == "0001-01-01") {
+                        return "------";
+                    }
+                    return ntime;
+                },
+
+$(function () {
+        var vm = new Vue({
+            el: '#main',
+            data: {
+                queryParm: {
+                    state: 99,
+                    pageIndex: 1,
+                    pageSize: 10,
+                    query: '',
+                },
+                isCreated: false,
+                loading: false,
+                list: [],
+                tabIndex:0,
+                tabData: [
+                    { label: '全部', value: 99, index:0 },
+                    { label: '待付款', value: 0, index:1 },
+                    { label: '待发货', value: 3, index:2 },
+                    { label: '待收货', value: 5, index:3 },
+                    { label: '退款售后', value: -98, index:4 }
+                ],
+                loadStatus: 0
+            },
+            methods: {
+                btnSelect(item) {
+                    var self = this;
+                    self.queryParm.state = item.value;
+                    self.tabIndex = item.index;
+                    self.loadStatus = 0;
+                    self.queryParm.pageIndex = 1;
+                    self.list = [];
+                    self.loadData();
+                },
+                loadData() {
+                    var self = this;
+                    if (!self.loading) {
+                        self.loading = true;
+                        $.ajax({
+                            type: "post",
+                            url: "/store/getdata",
+                            data: self.queryParm,
+                            dataType: "json",
+                            beforeSend: function () {
+                                self.loadStatus = 1;
+                            },
+                            success: function (data) {
+                                if (data) {
+                                    self.list = self.list.concat(data);
+                                    if (data.length >= self.pageSize) {
+                                        self.loadStatus = 0;
+                                        self.pageIndex++;
+                                    } else {
+                                        self.loadStatus = 3;
+                                    }
+                                }
+                                self.loading = false;
+                            },
+                            error: function () {
+                                loadStatus = 2;
+                                self.loading = false;
+                            }
+                        });
+                    }
+                },
+                search() {
+                    var self = this;
+                    self.loadStatus = 0;
+                    self.queryParm.pageIndex = 1;
+                    self.list = [];
+                    self.loadData();
+                },
+                toFixed(price) {
+                    var vPrice = price / 100;
+                    return vPrice.toFixed(2);
+                },
+                switchPage(type, item) {
+                    var self = this;
+                    var url = window.location.href;
+                    if (url.indexOf('&tab=') < 0) {
+                        url = url + '&tab=' + self.tabIndex;
+                    }
+                    url = encodeURIComponent(url);
+                    location.href = url;                    
+                },
+                convertData(time, hasSecond) {
+                    if (time == undefined) {
+                        return "";
+                    }
+                    var date = new Date(parseInt(time.substr(6, 13))); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                    var y = date.getFullYear();
+                    var m = date.getMonth() + 1;
+                    m = m < 10 ? ("0" + m) : m;
+                    var d = date.getDate();
+                    d = d < 10 ? ("0" + d) : d;
+                    var h = date.getHours();
+                    h = h < 10 ? ("0" + h) : h;
+                    var minute = date.getMinutes();
+                    var second = date.getSeconds();
+                    minute = minute < 10 ? ("0" + minute) : minute;
+                    second = second < 10 ? ("0" + second) : second;
+                    var ntime = y + "-" + m + "-" + d + " " + h + ":" + minute + (hasSecond ? ":" + second : '');
+                    if (ntime == "1950-04-24" || ntime == "0001-01-01") {
+                        return "------";
+                    }
+                    return ntime;
+                },
+                setTab() {
+                    var self = this;
+                    var index = self.getQueryStr('tab', 0);
+                    switch (index) {                        
+                        case 1:
+                            self.queryParm.state = 0;
+                            break;
+                        case 2:
+                            self.queryParm.state = 3;
+                            break;
+                        case 3:
+                            self.queryParm.state = 5;
+                            break;
+                        case 4:
+                            self.queryParm.state = -98;
+                            break;
+                        default:
+                            self.queryParm.state = 99;
+                    }
+                },
+                getQueryStr(name, def) {
+                    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                    var r = window.location.search.substr(1).match(reg);
+                    if (r != null)
+                        return unescape(r[2]);
+                    return def || "";
+                }
+            },
+            created: function () {
+                this.isCreated = true;
+                this.loadData();
+            },
+            mounted() {
+                var self = this;
+                $(window).scroll(function () {
+                    var scrollTop = $(this).scrollTop();
+                    var scrollHeight = $(document).height();
+                    var windowHeight = $(this).height(); //---页面可见的高
+                    if (self.loadStatus == 0 && (scrollTop + windowHeight) == scrollHeight) {
+                        self.loadData();
+                    }
+                });
+            }
+        });
+    });
