@@ -10,6 +10,14 @@ function GetQueryString(name,def) {
 }
 var tab = GetQueryString("tab", 0);
 
+function replaceParamVal(paramName,replaceVal) {
+    var oUrl = this.location.href.toString();
+    var re=eval('/('+ paramName+'=)([^&]*)/gi');
+    var nUrl = oUrl.replace(re,paramName+'='+replaceVal);
+    this.location = nUrl;
+　　window.location.href=nUrl
+}
+
 function isAndroid_ios() {
     var u = navigator.userAgent, isAndroid = u.indexOf('Android') > -1; //ios终端  
     return isAndroid;
