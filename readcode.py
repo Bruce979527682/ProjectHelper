@@ -9,6 +9,7 @@ isExists=os.path.exists(filepath)
 if not isExists:
     os.makedirs(filepath)
 
+# csvfile = open(r'accounts.csv','r', encoding='UTF-8')
 readfile = open(r'C:\work\Friend-0817\User.MiniSNS\Views\Friend\activitylist.cshtml','r', encoding='UTF-8')     
 lines =readfile.readlines()
 clist=[]
