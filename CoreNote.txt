@@ -1,0 +1,323 @@
+// HtmlEncoder.Default.Encode 防止恶意输入（即 JavaScript）损害应用。
+// Requires using System.Text.Encodings.Web;
+public string Welcome(string name, int numTimes = 1)
+{
+    return HtmlEncoder.Default.Encode($"Hello {name}, NumTimes is: {numTimes}");
+}
+
+
+
+
+
+//[Bind] 特性是防止过度发布的一种方法。 只应在 [Bind] 特性中包含想要更改的属性。
+//ValidateAntiForgeryToken 特性用于防止请求伪造
+// POST: Movies/Edit/5
+// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Edit(int id, [Bind("ID,Title,ReleaseDate,Genre,Price")] Movie movie)
+{
+    if (id != movie.ID)
+    {
+        return NotFound();//返回找不到页面
+    }
+
+    if (ModelState.IsValid)
+    {
+        try
+        {
+            _context.Update(movie);
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!MovieExists(movie.ID))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+        return RedirectToAction("Index");
+    }
+    return View(movie);
+}
+
+
+
+
+
+//表单标记帮助程序
+<form asp-controller="Demo" asp-action="Register" method="post">
+    <!-- Input and Submit elements -->
+</form>
+//上述表单标记帮助程序生成以下 HTML：
+<form method="post" action="/Demo/Register">
+    <!-- Input and Submit elements -->
+    <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>">
+</form>
+//MVC 运行时通过表单标记帮助程序属性 asp-controller 和 asp-action 生成 action 属性值。 表单标记帮助程序还会生成隐藏的请求验证令牌，防止跨站点请求伪造（在 HTTP Post 操作方法中与 [ValidateAntiForgeryToken] 属性配合使用时）。 保护纯 HTML 表单免受跨站点请求伪造的影响很难，但表单标记帮助程序可提供此服务。
+
+
+
+
+
+//使用命名路由
+<form asp-route="register" method="post">
+    <!-- Input and Submit elements -->
+</form>
+
+
+
+
+//提交到路由
+public class HomeController : Controller
+{
+    [Route("/Home/Test", Name = "Custom")]
+    public string Test()
+    {
+        return "This is the test page";
+    }
+}
+<form method="post">
+    <button asp-route="Custom">Click Me</button>
+    <input type="image" src="..." alt="Or Click Me" asp-route="Custom">
+</form>
+
+
+
+
+
+//在 ASP.NET Core 2.0 或更高版本， FormTagHelper antiforgery 令牌注入 HTML 窗体元素。 Razor 文件中的以下标记会自动生成防伪标记：
+<form method="post">
+    ...
+</form>
+//可以禁用 HTML 窗体元素的自动生成防伪标记
+<form method="post" asp-antiforgery="false">
+    ...
+</form>
+
+
+
+
+//Form 元素使用 Tag Helper ！ opt out 符号选择退出标记帮助器：
+<!form method="post">
+    ...
+</!form>
+
+
+//从视图中删除 FormTagHelper(标记帮助器)。 可以通过将以下指令添加到 Razor 视图来从视图中删除 FormTagHelper
+@removeTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+
+//ASP.NET Core 包括三个筛选器来处理 antiforgery 令牌：
+ValidateAntiForgeryToken
+AutoValidateAntiforgeryToken
+IgnoreAntiforgeryToken
+
+
+//自定义 Startup.ConfigureServices中的防伪选项：
+services.AddAntiforgery(options => 
+{
+    // Set Cookie properties using CookieBuilder properties†.
+    options.FormFieldName = "AntiforgeryFieldname";
+    options.HeaderName = "X-CSRF-TOKEN-HEADERNAME";
+    options.SuppressXFrameOptionsHeader = false;
+});
+使用CookieBuilder类的属性设置防伪 Cookie 属性。
+选项	描述
+Cookie	确定用于创建防伪 cookie 的设置。
+FormFieldName	防伪系统用于在视图中呈现防伪标记的隐藏窗体字段的名称。
+HeaderName	防伪系统使用的标头的名称。 如果 null，系统只考虑窗体数据。
+SuppressXFrameOptionsHeader	指定是否取消生成 X-Frame-Options 标头。 默认情况下，会生成一个值为 "SAMEORIGIN" 的标头。 默认为 false。
+
+
+
+//通过 IAntiforgery 配置防伪功能
+IAntiforgery提供用于配置防伪功能的 API。 可在 Startup 类的 Configure 方法中请求 IAntiforgery。 下面的示例使用应用程序主页中的中间件来生成防伪标记，并将其作为 cookie 发送到响应中（使用本主题后面部分介绍的默认角度命名约定）：
+public void Configure(IApplicationBuilder app, IAntiforgery antiforgery)
+{
+    app.Use(next => context =>
+    {
+        string path = context.Request.Path.Value;
+
+        if (
+            string.Equals(path, "/", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(path, "/index.html", StringComparison.OrdinalIgnoreCase))
+        {
+            // The request token can be sent as a JavaScript-readable cookie, 
+            // and Angular uses it by default.
+            var tokens = antiforgery.GetAndStoreTokens(context);
+            context.Response.Cookies.Append("XSRF-TOKEN", tokens.RequestToken, 
+                new CookieOptions() { HttpOnly = false });
+        }
+
+        return next(context);
+    });
+}
+//ValidateAntiForgeryToken是一个可应用于单个操作、控制器或全局的操作筛选器。 将阻止对应用了此筛选器的操作发出的请求，除非该请求包含有效的防伪令牌。
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel account)
+{
+    ManageMessageId? message = ManageMessageId.Error;
+    var user = await GetCurrentUserAsync();
+
+    if (user != null)
+    {
+        var result = 
+            await _userManager.RemoveLoginAsync(
+                user, account.LoginProvider, account.ProviderKey);
+
+        if (result.Succeeded)
+        {
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            message = ManageMessageId.RemoveLoginSuccess;
+        }
+    }
+
+    return RedirectToAction(nameof(ManageLogins), new { Message = message });
+}
+
+
+//仅自动验证不安全 HTTP 方法的防伪令牌
+//ASP.NET Core 应用不生成 antiforgery 令牌进行安全的 HTTP 方法 （GET、 HEAD、 选项和跟踪）。 可以使用AutoValidateAntiforgeryToken属性，而不是广泛应用 ValidateAntiForgeryToken 属性，然后使用 IgnoreAntiforgeryToken 属性将其重写。 此特性与 ValidateAntiForgeryToken 特性的工作方式相同，不同之处在于，它不需要使用以下 HTTP 方法发出的请求的令牌
+[Authorize]
+[AutoValidateAntiforgeryToken]
+public class ManageController : Controller
+{
+    //
+}
+//全局AutoValidateAntiforgeryToken
+services.AddMvc(options =>  options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+//控制器全局
+[Authorize]
+[AutoValidateAntiforgeryToken]
+public class ManageController : Controller
+{
+    [HttpPost]
+    [IgnoreAntiforgeryToken]
+    public async Task<IActionResult> DoSomethingSafe(SomeViewModel model)
+    {
+        // no antiforgery token required
+    }
+}
+
+
+//将 JavaScript 用于视图，可以使用视图中的服务创建令牌。 将AspNetCore 防伪 IAntiforgery服务插入到视图中，并调用GetAndStoreTokens：
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(Context).RequestToken;
+    }
+}
+<input type="hidden" id="RequestVerificationToken"  name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
+<div class="row">
+    <p><input type="button" id="antiforgery" value="Antiforgery"></p>
+    <script>
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == XMLHttpRequest.DONE) {
+                if (xhttp.status == 200) {
+                    alert(xhttp.responseText);
+                } else {
+                    alert('There was an error processing the AJAX request.');
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById("antiforgery").onclick = function () {
+                xhttp.open('POST', '@Url.Action("Antiforgery", "Home")', true);
+                xhttp.setRequestHeader("RequestVerificationToken", 
+                    document.getElementById('RequestVerificationToken').value);
+                xhttp.send();
+            }
+        });
+    </script>
+</div>
+
+//此方法无需直接处理来自服务器的 cookie 设置，也无需从客户端读取它。
+前面的示例使用 JavaScript 读取 AJAX POST 标头的隐藏字段值。
+JavaScript 还可以访问 cookie 中的令牌，并使用 cookie 的内容创建带有令牌值的标头。
+
+context.Response.Cookies.Append("CSRF-TOKEN", tokens.RequestToken,  new Microsoft.AspNetCore.Http.CookieOptions { HttpOnly = false });
+//假设脚本请求将令牌发送到名为 X-CSRF-TOKEN的标头，请将防伪服务配置为查找 X-CSRF-TOKEN 标头：
+services.AddAntiforgery(options => options.HeaderName = "X-CSRF-TOKEN");
+//下面的示例使用 JavaScript 通过适当的标头发出 AJAX 请求：
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+var csrfToken = getCookie("CSRF-TOKEN");
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == XMLHttpRequest.DONE) {
+        if (xhttp.status == 200) {
+            alert(xhttp.responseText);
+        } else {
+            alert('There was an error processing the AJAX request.');
+        }
+    }
+};
+xhttp.open('POST', '/api/password/changepassword', true);
+xhttp.setRequestHeader("Content-type", "application/json");
+xhttp.setRequestHeader("X-CSRF-TOKEN", csrfToken);
+xhttp.send(JSON.stringify({ "newPassword": "ReallySecurePassword999$$$" }));
+
+
+
+
+//Model验证
+public class Movie
+{
+    public int Id { get; set; }
+
+    [StringLength(60, MinimumLength = 3)]
+    public string Title { get; set; }
+
+    [Display(Name = "Release Date"), DataType(DataType.Date)]
+    public DateTime ReleaseDate { get; set; }
+
+    [RegularExpression(@"^[A-Z]+[a-zA-Z""'\s-]*$"), Required, StringLength(30)]
+    public string Genre { get; set; }
+
+    [Range(1, 100), DataType(DataType.Currency)]
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal Price { get; set; }
+
+    [RegularExpression(@"^[A-Z]+[a-zA-Z0-9""'\s-]*$"), StringLength(5)]
+    public string Rating { get; set; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
