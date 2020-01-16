@@ -206,7 +206,36 @@ $(function () {
                     if (r != null)
                         return unescape(r[2]);
                     return def || "";
-                }
+                },
+                //JS异步获取图片高度
+                async computeHeight(src) {
+                    if (src && src != '') {
+                        var newImg = new Image()
+                        newImg.src = src
+                        if (newImg.complete) {
+                            return newImg.height;
+                        }
+                        else {
+                            return await new Promise((resolve, reject) => {
+                                newImg.onload = function () {
+                                    resolve(newImg.height)
+                                }
+                                newImg.onerror = function () {
+                                    resolve(0)
+                                }
+                            })
+                        }
+                    }
+                },
+                async initView(src) {
+                    var self = this;
+                    var height = await self.computeHeight(src).then(function (data) {
+                        if (data) {
+                            return data;
+                        }
+                        return 0;
+                    });
+                },
             },
             created: function () {
                 this.isCreated = true;
@@ -225,3 +254,25 @@ $(function () {
             }
         });
     });
+
+
+    //JS异步获取图片高度
+    async computeHeight(src) {
+                    if (src && src != '') {
+                        var newImg = new Image()
+                        newImg.src = src
+                        if (newImg.complete) {
+                            return newImg.height;
+                        }
+                        else {
+                            return await new Promise((resolve, reject) => {
+                                newImg.onload = function () {
+                                    resolve(newImg.height)
+                                }
+                                newImg.onerror = function () {
+                                    resolve(0)
+                                }
+                            })
+                        }
+                    }
+                },
