@@ -13,7 +13,7 @@ isExists=os.path.exists(filepath)
 if not isExists:
     os.makedirs(filepath)
 
-readfile = open(r''+ deskpath +'\\complainlist.cshtml','r', encoding='UTF-8')     
+readfile = open(r''+ deskpath +'\\read.cs','r', encoding='UTF-8')     
 lines =readfile.readlines()
 clist=[]
 for line in lines:
