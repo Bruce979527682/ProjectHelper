@@ -235,6 +235,93 @@ def controller(rows, key):
     fout.writelines(sb)
     fout.close()
 
+def interface(rows, key):
+    sb = []
+    sb.append('{'+'\n')
+    sb.append('	"$schema": "http://json-schema.org/draft-04/schema#",'+'\n')
+    sb.append('	"type": "object",'+'\n')
+    sb.append('	"properties": {'+'\n')
+    sb.append('		"code": {'+'\n')
+    sb.append('			"type": "number",'+'\n')
+    sb.append('			"description": "返回码（0失败 1成功）"'+'\n')
+    sb.append('		},'+'\n')
+    sb.append('		"msg": {'+'\n')
+    sb.append('			"type": "string",'+'\n')
+    sb.append('			"description": "返回消息"'+'\n')
+    sb.append('		},'+'\n')
+    sb.append('		"obj": {'+'\n')
+    sb.append('			"type": "object",'+'\n')
+    sb.append('			"properties": {'+'\n')
+    for row in rows:        
+        if str(row[4]) == 'int' or str(row[4]) == 'double' or str(row[4]) == 'decimal':
+            sb.append('				"' + str(row[3]) + '": {'+'\n')
+            sb.append('					"type": "number",'+'\n')
+            sb.append('					"description": "' + row[2] +'"'+'\n')
+            if rows.index(row) + 1 != len(rows):
+                sb.append('				},'+'\n')
+            else:
+                sb.append('				}'+'\n')            
+        else:
+            sb.append('				"' + str(row[3]) + '": {'+'\n')
+            sb.append('					"type": "string",'+'\n')
+            sb.append('					"description": "' + row[2] +'"'+'\n')
+            if rows.index(row) + 1 != len(rows):
+                sb.append('				},'+'\n')
+            else:
+                sb.append('				}'+'\n')
+    sb.append('			},'+'\n')
+    sb.append('			"description": "返回对象"'+'\n')
+    sb.append('	   }'+'\n')
+    sb.append('    }'+'\n')
+    sb.append('}'+'\n')
+    sb.append('\n')
+    sb.append('\n')
+    sb.append('\n')
+    
+    sb.append('{'+'\n')
+    sb.append('	"$schema": "http://json-schema.org/draft-04/schema#",'+'\n')
+    sb.append('	"type": "object",'+'\n')
+    sb.append('	"properties": {'+'\n')
+    sb.append('		"code": {'+'\n')
+    sb.append('			"type": "number",'+'\n')
+    sb.append('			"description": "返回码（0失败 1成功）"'+'\n')
+    sb.append('		},'+'\n')
+    sb.append('		"msg": {'+'\n')
+    sb.append('			"type": "string",'+'\n')
+    sb.append('			"description": "返回消息"'+'\n')
+    sb.append('		},'+'\n')    
+    sb.append('		"obj": {'+'\n')
+    sb.append('			"type": "array",'+'\n')
+    sb.append('			"items": {'+'\n')
+    sb.append('				"type": "object",'+'\n')
+    sb.append('				"properties": {'+'\n')
+    for row in rows:        
+        if str(row[4]) == 'int' or str(row[4]) == 'double' or str(row[4]) == 'decimal':
+            sb.append('				    "' + str(row[3]) + '": {'+'\n')
+            sb.append('					    "type": "number",'+'\n')
+            sb.append('					    "description": "' + row[2] +'"'+'\n')
+            if rows.index(row) + 1 != len(rows):
+                sb.append('				    },'+'\n')
+            else:
+                sb.append('				    }'+'\n')            
+        else:
+            sb.append('				    "' + str(row[3]) + '": {'+'\n')
+            sb.append('					    "type": "string",'+'\n')
+            sb.append('					    "description": "' + row[2] +'"'+'\n')
+            if rows.index(row) + 1 != len(rows):
+                sb.append('				    },'+'\n')
+            else:
+                sb.append('				    }'+'\n')
+    sb.append('				}'+'\n')
+    sb.append('			},'+'\n')
+    sb.append('			"description": "返回列表"'+'\n')
+    sb.append('		}'+'\n')    
+    sb.append('	}'+'\n')
+    sb.append('}'+'\n')
+    
+    fout = open(filepath + '/'+key+'Interface.txt', "w", encoding='utf-8')
+    fout.writelines(sb)
+    fout.close()
 
 for key in tables:
     items = tables[key]
@@ -245,9 +332,12 @@ for key in tables:
     bll(items, key)
     
     #controller
-    controller(items, key)
+    controller(items, key)    
 
     # database
     database(items)
+    
+    # interface json
+    interface(items, key)
 
 print('end')
