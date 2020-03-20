@@ -136,7 +136,7 @@ def bll(rows, key):
     sb.append('        /// <returns></returns>'+'\n')
     sb.append('        public List<' + key + '> Get' + key[key.index('_')+1:] + 'List(int cityInfoId, int pageIndex = 1, int pageSize = 10)'+'\n')
     sb.append('        {'+'\n')
-    sb.append('            var where = $"CityInfoId={cityInfoId}";'+'\n')    
+    sb.append('            var where = $"CityInfoId={cityInfoId} and Status<>-1";'+'\n')    
     sb.append('            return GetList(where, pageSize, pageIndex);'+'\n')
     sb.append('        }'+'\n')
     sb.append('        '+'\n')
