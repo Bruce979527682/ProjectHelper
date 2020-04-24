@@ -219,6 +219,7 @@ def database(rows):
                       ('NOT NULL' if row[9] == 'y' else '') + 'COMMENT \''+ row[2] +'\','+'\n')
     pkeycol = list(filter(lambda x: x[6] == 'y', rows))
     indexcol = list(filter(lambda x: x[8] == 'y', rows))
+    ukeycol = list(filter(lambda x: x[10] == 'y', rows))
     if pkeycol != None:
         if len(indexcol) > 0:
             sb.append('  PRIMARY KEY (`' + pkeycol[0][3] + '`),'+'\n')
@@ -227,8 +228,12 @@ def database(rows):
     ikey = []
     for ic in indexcol:
         ikey.append(' `' + ic[3] + '`')
-    sb.append('  KEY `Key_Index` (' +
-              str(ikey).replace('[', '').replace(']', '').replace("'", '')+')'+'\n')
+    ukey = []
+    for uc in ukeycol:
+        ukey.append(' `' + uc[3] + '`')
+    if ukeycol != None:
+        sb.append('  UNIQUE KEY `Key_Unique` (' + str(ukey).replace('[', '').replace(']', '').replace("'", '')+') USING BTREE,'+'\n')
+    sb.append('  KEY `Key_Index` (' + str(ikey).replace('[', '').replace(']', '').replace("'", '')+')'+'\n')
     sb.append(') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;'+'\n')
     fout = open(filepath + '/'+key+'-database.txt', "w", encoding='utf-8')
     fout.writelines(sb)
@@ -402,6 +407,22 @@ def interface(rows, key):
     sb.append('			"description": "返回列表"'+'\n')
     sb.append('		}'+'\n')    
     sb.append('	}'+'\n')
+    sb.append('}'+'\n')
+    sb.append(''+'\n')
+    sb.append(''+'\n')
+    sb.append(''+'\n')
+    sb.append('{'+'\n')
+    for row in rows:        
+        if str(row[4]) == 'int' or str(row[4]) == 'double' or str(row[4]) == 'decimal':
+            if rows.index(row) == len(rows) - 1:
+                sb.append(' "'+ str(row[3]) +'": 0' +'\n')
+            else:
+                sb.append(' "'+ str(row[3]) +'": 0,' +'\n')
+        else:
+            if rows.index(row) == len(rows) - 1:
+                sb.append(' "'+ str(row[3]) +'": ""' +'\n')
+            else:
+                sb.append(' "'+ str(row[3]) +'": "",' +'\n')
     sb.append('}'+'\n')
     
     fout = open(filepath + '/'+key+'Interface.txt', "w", encoding='utf-8')
