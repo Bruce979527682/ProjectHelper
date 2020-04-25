@@ -77,6 +77,10 @@ def entity(rows, key):
                 sb.append('        public string ' + str(row[3]) + ' { get; set; }'+'\n')
             elif str(row[4]) == 'datetime':
                 sb.append('        public DateTime ' + str(row[3]) + ' { get; set; }'+'\n')
+            elif str(row[4]) == 'text':
+                sb.append('        public string ' +  str(row[3]) + ' { get; set; }'+'\n')
+            elif str(row[4]) == 'int':
+                sb.append('        public int ' +  str(row[3]) + ' { get; set; }'+'\n')
             else:
                 sb.append('        public ' +  str(row[4]) + ' ' + str(row[3]) + ' { get; set; }'+'\n')
     sb.append('    }'+'\n')
