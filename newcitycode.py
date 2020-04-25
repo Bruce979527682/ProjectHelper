@@ -91,6 +91,8 @@ def bll(rows, key):
     sb.append('using DAL.Base;'+'\n')
     sb.append('using Entity.City;'+'\n')
     sb.append('using System.Collections.Generic;'+'\n')
+    sb.append('using MySql.Data.MySqlClient;'+'\n')
+    sb.append('using System.Data;'+'\n')
     sb.append('namespace BLL.City'+'\n')
     sb.append('{'+'\n')
     sb.append('    /// <summary>'+'\n')
