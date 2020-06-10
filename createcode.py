@@ -151,11 +151,13 @@ def database(rows):
                       ('NOT NULL' if row[9] == 'y' else '') + 'COMMENT \''+ row[2] +'\','+'\n')
     pkeycol = list(filter(lambda x: x[6] == 'y', rows))
     indexcol = list(filter(lambda x: x[8] == 'y', rows))
-    if pkeycol != None:
+    if pkeycol != None and len(pkeycol) > 0:
         if len(indexcol) > 0:
             sb.append('  PRIMARY KEY (`' + pkeycol[0][3] + '`),'+'\n')
         else:
             sb.append('  PRIMARY KEY (`' + pkeycol[0][3] + '`)'+'\n')
+    else:
+        print( rows[0][0] + 'PRIMARY KEY null')
     ikey = []
     for ic in indexcol:
         ikey.append(' `' + ic[3] + '`')
