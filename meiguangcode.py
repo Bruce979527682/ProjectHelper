@@ -95,18 +95,15 @@ def entity(rows, key):
 
 def bll(rows, key):
     sb = []
-    sb.append('using System;'+'\n')
-    sb.append('using DAL.Base;'+'\n')
-    sb.append('using Entity.City;'+'\n')
+    sb.append('using Entity.Api;'+'\n')
     sb.append('using System.Collections.Generic;'+'\n')
-    sb.append('using MySql.Data.MySqlClient;'+'\n')
-    sb.append('using System.Data;'+'\n')
-    sb.append('namespace BLL.City'+'\n')
+    sb.append(''+'\n')
+    sb.append('namespace BLL.Api'+'\n')
     sb.append('{'+'\n')
     sb.append('    /// <summary>'+'\n')
     sb.append('    /// ' + tnames[key]+'表BLL\n')
     sb.append('    /// </summary>'+'\n')
-    sb.append('    public class ' + key + 'BLL: BaseMySql<' + key + '>\n')
+    sb.append('    public class ' + key + 'BLL: BaseSqlSugar<' + key + '>\n')
     sb.append('    {'+'\n')
     sb.append('        private string _cacheKey = "'+key+'_{0}";'+'\n')
     sb.append('        #region 单例'+'\n')
