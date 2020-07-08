@@ -141,7 +141,7 @@ def bll(rows, key):
     sb.append('        /// <param name="pageIndex"></param>'+'\n')
     sb.append('        /// <param name="pageSize"></param>'+'\n')
     sb.append('        /// <returns></returns>'+'\n')
-    sb.append('        public List<' + key + '> Get' + key + 'List(int cityInfoId, int pageIndex = 1, int pageSize = 10)'+'\n')
+    sb.append('        public List<' + key + '> Get' + key + 'List(int pageIndex = 1, int pageSize = 10)'+'\n')
     sb.append('        {'+'\n')
     sb.append('            var where = $"Status<>-4";'+'\n')
     sb.append('            var totalCount = 0;'+'\n')
