@@ -145,7 +145,7 @@ def bll(rows, key):
     sb.append('        {'+'\n')
     sb.append('            var where = $"Status<>-4";'+'\n')
     sb.append('            var totalCount = 0;'+'\n')
-    sb.append('            return GetList(where, ref totalCount, pageSize, pageIndex);'+'\n')
+    sb.append('            return GetList(where, ref totalCount, pageIndex, pageSize);'+'\n')
     sb.append('        }'+'\n')
     sb.append('        '+'\n')
     sb.append('        /// <summary>'+'\n')
