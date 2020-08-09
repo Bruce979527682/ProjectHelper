@@ -173,5 +173,29 @@ namespace ConsoleTest
 
             public List<address> children { get; set; }
         }
+
+        /// <summary>
+        /// DataRow转Entity
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="r"></param>
+        /// <returns></returns>
+        public T DataRowToEntity<T>(DataRow r)
+        {
+            T t = default(T);
+            t = Activator.CreateInstance<T>();
+            PropertyInfo[] ps = t.GetType().GetProperties();
+            foreach (var item in ps)
+            {
+                if (r.Table.Columns.Contains(item.Name))
+                {
+                    object v = r[item.Name];
+                    if (v.GetType() == typeof(System.DBNull))
+                        v = null;
+                    item.SetValue(t, v, null);
+                }
+            }
+            return t;
+        }
     }
 }

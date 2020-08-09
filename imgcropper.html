@@ -1,0 +1,161 @@
+<!-- git - https://github.com/baijunjie/PhotoClip.js.git -->
+
+<link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.3/style/weui.min.css">
+<style>
+    .img-cropper {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+
+    .img-area {
+        height: 26rem;
+        user-select: none;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .img-hander {
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .img-btn {
+        display: block;
+        color: #fff;
+        background-color: #04be02;
+        line-height: 1;
+        font-size: 1.07692308em;
+        z-index: 30;
+        border-radius: .30769231em;
+        box-shadow: 0 0 0.61538462em rgba(0,0,0,.4);
+    }
+
+    .photo-clip-layer {
+        background-color: white;
+    }
+
+    .btn-margin {
+        margin: 10px;
+    }
+
+    .clip-view {
+        margin: 0 auto;
+        width: 200px;
+        height: 200px;
+        background-color: #666;
+        margin-top: 10px;
+    }
+</style>
+
+<script type="text/html" id="img-cropper">
+    <div class="img-cropper" v-show="showCropper">
+        <div id="clipArea" class="img-area" ref="clipArea"></div>
+        <input type="file" id="cutImgFile" ref="ufile" style="display:none;" />
+        <div class="img-hander">
+            <div style="padding: 3rem 10rem;">
+                <button class="weui-btn weui-btn_default" @@click.stop="selectImg()">
+                    选择图片
+                </button>
+                <button id="btnCutFinish" class="weui-btn weui-btn_primary">
+                    完成
+                </button>
+            </div>
+            <div id="imgCutView" ref="imgCutView" class="clip-view" :style="styleObject">
+            </div>
+        </div>
+    </div>
+</script>
+<script src="/Content/fcontent/plugin/photoclip/iscroll-zoom-min.js"></script>
+<script src="/Content/fcontent/plugin/photoclip/hammer.min.js"></script>
+<script src="/Content/fcontent/plugin/photoclip/lrz.all.bundle.js"></script>
+<script src="/Content/fcontent/plugin/photoclip/PhotoClip.js"></script>
+<script>
+    $(function () {
+        var imgCropper = Vue.extend({
+            template: "#img-cropper",
+            data() {
+                return {
+                    imgclip: '',
+                    baseImg: '',
+                    showCropper: false,
+                    styleObject: {
+                        width: '260px',
+                        height: '260px',
+                        display: 'none'
+                    }
+                }
+            },
+            props: {
+                mid: {
+                    type: Number,
+                    default: 0
+                },
+                icon: {
+                    type: String,
+                    default: ""
+                },
+                showcropper: {
+                    type: Boolean,
+                    default: false
+                },
+                imgwidth: {
+                    type: Number,
+                    default: 260
+                },
+                imgheight: {
+                    type: Number,
+                    default: 260
+                }
+            },
+            mounted() {
+                this.mapData();
+            },
+            methods: {
+                mapData() {
+                    var self = this;
+                    self.showCropper = self.showcropper;
+                    self.styleObject.width = self.imgwidth * 0.6 + 'px';
+                    self.styleObject.height = self.imgheight * 0.6 + 'px';
+                    self.$nextTick(function () {
+                        self.imgclip = new PhotoClip(self.$refs.clipArea, {
+                            size: [self.imgwidth, self.imgheight],
+                            outputSize: 640,
+                            file: '#cutImgFile',
+                            view: '#imgCutView',
+                            ok: '#btnCutFinish',
+                            rotateFree: false,
+                            loadStart: function () {
+                                console.log('loadstart pic');
+                            },
+                            loadComplete: function () {
+                                console.log('loadcomplete pic');
+                            },
+                            done: function (dataURL) {
+                                console.log(dataURL);
+                                self.baseImg = dataURL;
+                                self.$parent.setImgData(dataURL);
+                                self.showCropper = false;
+                            },
+                            fail: function (msg) {
+                                alert(msg);
+                            }
+                        });
+                        self.$refs.ufile.addEventListener('change', function () {
+                            self.imgclip.load(this.files[0]);
+                        });
+                    });
+                },
+                selectImg() {
+                    $('#cutImgFile').click();
+                }
+            }
+        });
+        Vue.component("imgCropper", imgCropper);
+    });
+
+</script>
+
